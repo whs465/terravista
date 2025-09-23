@@ -1,5 +1,17 @@
 [
   {
+    "service": "",
+    "name": "",
+    "description": "",
+    "address": "",
+    "phone1": "",
+    "phone2": "",
+    "whatsapp": "",
+    "website": "",
+    "email": "",
+    "stars": 0
+  },
+  {
     "service": "Emergencias",
     "name": "123",
     "description": "Linea de emergencias 123 desde fijo o celular. Violencia físisca, robo, accidente de tránsito, riña, incendio, caida en casa, salud en alto riesgo, mascotas en peligro.",
@@ -70,6 +82,18 @@
     "website": "",
     "email": "",
     "stars": 5
+  },
+  {
+    "service": "Electrodomésticos",
+    "name": "Eugenio Mosquera",
+    "description": "Reparación neveras y lavadoras",
+    "address": "",
+    "phone1": "+57 3204572235",
+    "phone2": "",
+    "whatsapp": "+57 3204572235",
+    "website": "",
+    "email": "",
+    "stars": 4
   },
   {
     "service": "Gas",
@@ -166,6 +190,18 @@
     "website": "",
     "email": "conjuntoterravista13@gmail.com",
     "stars": 5
+  },
+  {
+    "service": "Electrodomésticos",
+    "name": "ServiTécnicos",
+    "description": "Reparación y mantenimiento de electrodomésticos",
+    "address": "Cra 111 A # 151 C 25",
+    "phone1": "+57 6016840132",
+    "phone2": "",
+    "whatsapp": "+57 3153902316",
+    "website": "",
+    "email": "",
+    "stars": 4
   },
   {
     "service": "Plomeria",
