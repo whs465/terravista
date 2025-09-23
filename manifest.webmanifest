@@ -1,10 +1,10 @@
 {
-    "name": "Contactos del Edificio",
+    "name": "Contactos Terravista",
     "short_name": "Contactos",
     "start_url": "/",
     "display": "standalone",
-    "background_color": "#8A3F7F55",
-    "theme_color": "#2e091c",
+    "background_color": "#000000",
+    "theme_color": "#000000",
     "lang": "es-CO",
     "description": "Directorio de servicios y contactos del edificio con búsqueda offline.",
     "icons": []
