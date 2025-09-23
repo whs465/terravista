@@ -180,14 +180,15 @@ body {
 
 
 .card {
-    background: var(--card);
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.18) 0%, rgba(0, 0, 0, 0) 28%), var(--card);
     border: 2px solid var(--border);
     border-radius: 1rem;
     padding: .9rem;
     display: grid;
     gap: .5rem;
     color: var(--ink);
-    box-shadow: 0 6px 18px rgba(138, 63, 127, .25)
+    box-shadow: 0 6px 18px rgba(138, 63, 127, .25), inset 0 1px 0 rgba(255, 255, 255, .04), inset 0 -1px 0 rgba(0, 0, 0, .35);
+    position: relative
 }
 
 .card h3 {
