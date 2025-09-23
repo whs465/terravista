@@ -31,7 +31,19 @@ el.installBtn?.addEventListener('click', async () => {
 
 // Service worker
 if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./sw.js');
+    navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' })
+        .then(reg => {
+            // Forzar que la nueva versión tome control
+            if (reg.waiting) reg.waiting.postMessage({ type: 'SKIP_WAITING' });
+            reg.addEventListener('updatefound', () => {
+                const nw = reg.installing;
+                nw?.addEventListener('statechange', () => {
+                    if (nw.state === 'installed' && navigator.serviceWorker.controller) {
+                        location.reload(); // recarga una vez cuando hay update
+                    }
+                });
+            });
+        });
 }
 
 
