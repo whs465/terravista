@@ -1,4 +1,5 @@
 const DATA_URL = './contacts.json';
+
 const el = {
     search: document.getElementById('search'),
     sortBy: document.getElementById('sortBy'),
@@ -12,7 +13,6 @@ const el = {
 
 let raw = [];
 let deferredPrompt = null;
-
 
 window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
@@ -28,6 +28,7 @@ el.installBtn?.addEventListener('click', async () => {
     deferredPrompt = null;
     el.installBtn.hidden = true;
 });
+
 // Service worker
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('./sw.js');
@@ -141,7 +142,7 @@ ${c.address ? `<p class="addr">📍 ${highlight(c.address, q)}</p>` : ''}
 <div class="actions">
 ${telLink(c.phone1)}
 ${telLink(c.phone2)}
-${waLink(c.whatsapp || c.phone1)}
+${waLink(c.whatsapp)}
 ${c.email ? `<a href="mailto:${escapeHTML(c.email)}">Email</a>` : ''}
 ${c.website ? `<a href="${escapeHTML(c.website)}" target="_blank" rel="noopener">Website</a>` : ''}
 </div>
