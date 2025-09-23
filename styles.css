@@ -18,7 +18,8 @@
 }
 
 * {
-    box-sizing: border-box
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent
 }
 
 html,
@@ -241,11 +242,45 @@ body {
     transition: transform .08s ease, box-shadow .08s ease
 }
 
+.actions a:link,
+.actions a:visited {
+    background: var(--accent);
+    color: #FFFFFF;
+    border-color: var(--border)
+}
+
 .actions a:hover,
 .actions button:hover {
     transform: translateY(-1px);
     box-shadow: 0 6px 16px rgba(138, 63, 127, .45)
 }
+
+/* Fijar estilos de enlaces tras volver de apps externas (iOS/Android) */
+.actions a,
+.actions a:link,
+.actions a:visited,
+.actions a:hover,
+.actions a:active,
+.actions a:focus,
+.actions a:focus-visible {
+    background: var(--accent) !important;
+    color: #FFFFFF !important;
+    border-color: var(--border) !important;
+    -webkit-text-fill-color: #FFFFFF;
+}
+
+
+.actions a:active,
+.actions button:active {
+    filter: brightness(.92)
+}
+
+.actions a:focus-visible,
+.actions button:focus-visible {
+    outline: 2px solid #FFFFFF;
+    outline-offset: 2px
+}
+
 
 .actions a:hover,
 .actions button:hover {

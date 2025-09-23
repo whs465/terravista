@@ -28,12 +28,11 @@ el.installBtn?.addEventListener('click', async () => {
     deferredPrompt = null;
     el.installBtn.hidden = true;
 });
-
-
 // Service worker
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('./sw.js');
 }
+
 
 fetch(DATA_URL)
     .then(r => r.json())
@@ -58,7 +57,6 @@ function matchesQuery(c, q) {
         .map(normalize).join(' ');
     return blob.includes(q);
 }
-
 
 function render() {
     const q = normalize(el.search.value);
@@ -86,6 +84,7 @@ function render() {
     el.list.innerHTML = letters.map(letter => sectionHTML(letter, groups[letter], q)).join('');
 }
 
+
 function sectionHTML(letter, items, q) {
     return `
 <section class="section" id="${letter}">
@@ -95,7 +94,6 @@ ${items.map(c => cardHTML(c, q)).join('')}
 </div>
 </section>`;
 }
-
 
 function highlight(text, q) {
     if (!q) return escapeHTML(text);
@@ -120,6 +118,7 @@ function starHTML(n) {
     const v = Math.max(0, Math.min(5, n | 0));
     return `<span class="stars">${Array.from({ length: 5 }, (_, i) => `<span class="star" aria-hidden="true">${i < v ? '★' : '☆'}</span>`).join('')}</span>`;
 }
+
 
 function telLink(num) { return num ? `<a href="tel:${num}">Tel: ${escapeHTML(num)}</a>` : '' }
 function waLink(num) {
