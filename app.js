@@ -29,22 +29,31 @@ el.installBtn?.addEventListener('click', async () => {
     el.installBtn.hidden = true;
 });
 
-// Service worker
+// Service worker (sin .then, con auto-update)
 if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' })
-        .then(reg => {
-            // Forzar que la nueva versión tome control
+    (async () => {
+        try {
+            const reg = await navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' });
+
+            // Forzar que la nueva versión tome control si ya está esperando
             if (reg.waiting) reg.waiting.postMessage({ type: 'SKIP_WAITING' });
+
+            // Recargar cuando una nueva versión termine de instalarse
             reg.addEventListener('updatefound', () => {
                 const nw = reg.installing;
-                nw?.addEventListener('statechange', () => {
+                if (!nw) return;
+                nw.addEventListener('statechange', () => {
                     if (nw.state === 'installed' && navigator.serviceWorker.controller) {
                         location.reload(); // recarga una vez cuando hay update
                     }
                 });
             });
-        });
+        } catch (err) {
+            console.error('SW registration failed:', err);
+        }
+    })();
 }
+
 
 
 fetch(DATA_URL)

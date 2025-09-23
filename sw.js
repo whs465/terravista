@@ -1,21 +1,22 @@
-const VERSION = 'v6-2025-09-23';             // ⬅️ cambia al desplegar
+const VERSION = 'v9-2025-09-23b';
 const CACHE = `pwa-contactos-${VERSION}`;
 
 const base = self.registration.scope;
 const A = (p) => new URL(p, base).toString();
 
-const ASSETS = [
+const APP_SHELL = [
     A('index.html?v=' + VERSION),
     A('styles.css?v=' + VERSION),
     A('app.js?v=' + VERSION),
-    A('contacts.json?v=' + VERSION),
+    A('contacts.example.json?v=' + VERSION),
     A('manifest.webmanifest?v=' + VERSION),
-    A('assets/terra.jpg?v=' + VERSION),
+    A('assets/logo.jpg?v=' + VERSION),
 ];
 
+
 self.addEventListener('install', (e) => {
-    self.skipWaiting(); // toma control sin esperar
-    e.waitUntil(caches.open(CACHE).then((c) => c.addAll(ASSETS)));
+    self.skipWaiting();
+    e.waitUntil(caches.open(CACHE).then((c) => c.addAll(APP_SHELL)));
 });
 
 self.addEventListener('activate', (e) => {
@@ -26,22 +27,46 @@ self.addEventListener('activate', (e) => {
     );
 });
 
-// JSON: network-first (para ver cambios), estáticos: cache-first
 self.addEventListener('fetch', (e) => {
     const req = e.request;
     const url = new URL(req.url);
 
-    if (url.pathname.endsWith('.json')) {
+    // 1) Navegaciones (abrir/recargar/ruta directa): network -> fallback al index cacheado
+    if (req.mode === 'navigate') {
         e.respondWith(
-            fetch(req)
-                .then(res => { caches.open(CACHE).then(c => c.put(req, res.clone())); return res; })
-                .catch(() => caches.match(req))
+            fetch(req).catch(() => caches.match(A('index.html?v=' + VERSION)))
         );
-    } else {
-        e.respondWith(caches.match(req).then(r => r || fetch(req)));
+        return;
     }
+
+    // 2) Estáticos same-origin: cache-first (CSS/JS/IMG/FONT)
+    if (url.origin === self.location.origin && /\.(css|js|png|jpg|jpeg|svg|webp|ico|woff2?)$/i.test(url.pathname)) {
+        e.respondWith(
+            caches.match(req).then(r => r || fetch(req).then(res => {
+                const copy = res.clone();
+                caches.open(CACHE).then(c => c.put(req, copy));
+                return res;
+            }))
+        );
+        return;
+    }
+
+    // 3) JSON same-origin: network-first con fallback a caché (para ver actualizaciones)
+    if (url.origin === self.location.origin && url.pathname.endsWith('.json')) {
+        e.respondWith(
+            fetch(req).then(res => {
+                caches.open(CACHE).then(c => c.put(req, res.clone()));
+                return res;
+            }).catch(() => caches.match(req))
+        );
+        return;
+    }
+
+    // 4) Por defecto: intentá red y si no, caché
+    e.respondWith(fetch(req).catch(() => caches.match(req)));
 });
 
+// soporte para actualizar en caliente si querés llamarlo desde tu app
 self.addEventListener('message', (e) => {
     if (e.data?.type === 'SKIP_WAITING') self.skipWaiting();
 });

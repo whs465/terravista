@@ -1,7 +1,8 @@
 {
     "name": "Directorio Terravista",
     "short_name": "Contactos",
-    "start_url": "/",
+    "start_url": ".",
+    "scope": ".",
     "display": "standalone",
     "background_color": "#F2F1EE",
     "theme_color": "#2E7D32",
