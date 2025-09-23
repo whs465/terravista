@@ -1,0 +1,110 @@
+[
+    {
+        "service": "Gas",
+        "name": "Fredy Garcia",
+        "description": "Calentadores Andino. Servicio técnico en gasodomesticos.",
+        "address": "",
+        "phone1": "+57 3118824835",
+        "phone2": "",
+        "whatsapp": "+57 3118824835",
+        "website": "",
+        "email": "calentadoresandino@gmail.com",
+        "stars": 5
+    },
+    {
+        "service": "Gas",
+        "name": "Vanti",
+        "description": "Distribucion y comercialización de gas natural.",
+        "address": "Calle 71 A #5-38",
+        "phone1": "+57 3154164164",
+        "phone2": "",
+        "whatsapp": "+57 3154164164",
+        "website": "",
+        "email": "servicioalcliente@grupovanti.com",
+        "stars": 5
+    },
+    {
+        "service": "Fotografia",
+        "name": "Gomez Caidedo Fotografía",
+        "description": "Impresion, sercicios fotográficos, estampados",
+        "address": "Cra. 8 #160 A 21",
+        "phone1": "+57 3118135035",
+        "phone2": "",
+        "whatsapp": "+57 3118135035",
+        "website": "",
+        "email": "gomezcaicedofotografia@gmail.com",
+        "stars": 5
+    },
+    {
+        "service": "Vigilancia",
+        "name": "Portería",
+        "description": "Recepción 24/7",
+        "address": "Cra 8f # 166-34",
+        "phone1": "+57 3229060688",
+        "phone2": "",
+        "whatsapp": "",
+        "website": "",
+        "email": "conjuntoterravista13@gmail.com",
+        "stars": 5
+    },
+    {
+        "service": "Mallas Seguridad",
+        "name": "Mallados Kids Seguridad",
+        "description": "Mallas de seguridad certificadas.",
+        "address": "",
+        "phone1": "+57 3112310880",
+        "phone2": "",
+        "whatsapp": "+57 3112310880",
+        "website": "",
+        "email": "",
+        "stars": 5
+    },
+    {
+        "service": "Policia",
+        "name": "Cuadrante",
+        "description": "",
+        "address": "",
+        "phone1": "+57 3008010031",
+        "phone2": "",
+        "whatsapp": "",
+        "website": "https://sig.policia.gov.co/MNVCC/",
+        "email": "",
+        "stars": 4
+    },
+    {
+        "service": "Emergencias",
+        "name": "123",
+        "description": "Linea de emergencias 123 desde fijo o celular. Violencia físisca, robo, accidente de tránsito, riña, incendio, caida en casa, salud en alto riesgo, mascotas en peligro.",
+        "address": "",
+        "phone1": "123",
+        "phone2": "",
+        "whatsapp": "",
+        "website": "https://sig.policia.gov.co/MNVCC/",
+        "email": "",
+        "stars": 4
+    },
+    {
+        "service": "Pizza",
+        "name": "Andrus Pizza",
+        "description": "Pizzeria y ristorante 🍕🍝",
+        "address": "",
+        "phone1": "+57 3222919154",
+        "phone2": "",
+        "whatsapp": "",
+        "website": "",
+        "email": "",
+        "stars": 5
+    },
+    {
+        "service": "Pizza",
+        "name": "Andrus Pauzza",
+        "description": "Pizzeria🍕",
+        "address": "",
+        "phone1": "+57 6014754141",
+        "phone2": "+57 3123659000",
+        "whatsapp": "",
+        "website": "",
+        "email": "",
+        "stars": 5
+    }
+]

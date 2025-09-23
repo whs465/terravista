@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#8A3F7F" />
+    <title>Contactos del Edificio</title>
+
+
+    <!-- Fuente Work Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+
+    <link rel="manifest" href="./manifest.webmanifest">
+    <link rel="icon"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' rx='56' fill='%231f2937'/%3E%3Ctext x='50%25' y='56%25' text-anchor='middle' fill='white' font-size='128' font-family='Arial'%3E☎%3C/text%3E%3C/svg%3E" />
+
+
+    <link rel="stylesheet" href="./styles.css" />
+</head>
+
+<body>
+    <header class="app-header">
+        <h1>Contactos del Edificio</h1>
+        <button id="installBtn" class="btn ghost" hidden>Instalar</button>
+    </header>
+
+
+    <section class="controls">
+        <input id="search" type="search" placeholder="Buscar por servicio, nombre, teléfono, email…"
+            aria-label="Buscar" />
+        <div class="row">
+            <label class="select">
+                <span>Ordenar por</span>
+                <select id="sortBy">
+                    <option value="name" selected>Nombre</option>
+                    <option value="service">Servicio</option>
+                </select>
+            </label>
+            <label class="range">
+                <span>Mín. estrellas</span>
+                <input id="minStars" type="range" min="0" max="5" step="1" value="0" />
+                <output id="minStarsOut">0</output>
+            </label>
+        </div>
+    </section>
+
+
+    <main class="content">
+        <aside class="az-index" id="azIndex" aria-label="Índice alfabético"></aside>
+        <section id="list" class="list" aria-live="polite"></section>
+    </main>
+
+    <footer class="app-footer">
+        <small>Terravista • Hecho con ❤️ • © 2025</small>
+    </footer>
+
+
+    <script src="./app.js" type="module"></script>
+</body>
+
+</html>
