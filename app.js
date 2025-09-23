@@ -167,3 +167,22 @@ function buildAZ() {
     const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
     el.azIndex.innerHTML = letters.map(L => `<a href="#${L}">${L}</a>`).join('');
 }
+
+const hideSplash = () => document.getElementById('splash')?.classList.add('is-hidden');
+
+if (document.readyState === 'complete') setTimeout(hideSplash, 1500);
+else window.addEventListener('load', () => setTimeout(hideSplash, 1500));
+
+// si usás SW, recarga/actualiza y ocultá también:
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' })
+        .then(reg => {
+            if (reg.waiting) reg.waiting.postMessage({ type: 'SKIP_WAITING' });
+            reg.addEventListener('updatefound', () => {
+                const nw = reg.installing;
+                nw?.addEventListener('statechange', () => {
+                    if (nw.state === 'installed' && navigator.serviceWorker.controller) hideSplash();
+                });
+            });
+        });
+}

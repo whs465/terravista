@@ -10,6 +10,7 @@ const ASSETS = [
     A('app.js?v=' + VERSION),
     A('contacts.json?v=' + VERSION),
     A('manifest.webmanifest?v=' + VERSION),
+    A('assets/terra.jpg?v=' + VERSION),
 ];
 
 self.addEventListener('install', (e) => {
