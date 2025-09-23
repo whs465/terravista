@@ -3,8 +3,8 @@
     "short_name": "Contactos",
     "start_url": "/",
     "display": "standalone",
-    "background_color": "#000000",
-    "theme_color": "#000000",
+    "background_color": "#F2F1EE",
+    "theme_color": "#2E7D32",
     "lang": "es-CO",
     "description": "Directorio de servicios y contactos del edificio con búsqueda offline.",
     "icons": []

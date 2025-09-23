@@ -1,20 +1,22 @@
 :root {
-    --bg: #000000;
-    /* fondo negro para alto contraste */
-    --card: #0B0B0B;
-    /* tarjetas oscuras */
-    --ink: #FFFFFF;
-    /* texto principal en blanco */
-    --muted: #CACACA;
-    /* texto secundario gris de la paleta */
-    --accent: #8A3F7F;
-    /* púrpura protagonista */
-    --chip: #8A3F7F;
-    /* chips y etiquetas */
-    --border: #8A3F7F;
-    /* bordes en púrpura para meter color */
-    --sticky: #8A3F7F;
-    /* headers pegajosos púrpura */
+    --bg: #F2F1EE;
+    /* gris cálido del fondo del logo */
+    --card: #FFFFFF;
+    /* tarjetas blancas */
+    --ink: #1F1B18;
+    /* espresso (trazo del logo) */
+    --muted: #6B625B;
+    /* texto secundario tibio */
+    --accent: #2E7D32;
+    /* verde hoja (CTA, énfasis) */
+    --cta: #2E7D32;
+    /* alias explícito para botones */
+    --chip: #E5BC48;
+    /* dorado hoja seca para chips */
+    --border: #D9D2C7;
+    /* borde arena cálida */
+    --sticky: #FFF7E0;
+    /* encabezados pegajosos dorados muy claros */
 }
 
 * {
@@ -44,10 +46,16 @@ body {
     align-items: center;
     justify-content: space-between;
     padding: 1rem 1.25rem;
-    background: linear-gradient(90deg, #000000 0%, #8A3F7F 100%);
+    background: linear-gradient(90deg, #2E7D32 0%, #B8732F 100%);
     color: #FFFFFF;
     border-bottom: none;
-    box-shadow: 0 1px 0 #8A3F7F55
+    box-shadow: 0 1px 0 rgba(0, 0, 0, .15)
+}
+
+.app-header h1 {
+    font-size: 1.25rem;
+    margin: 0;
+    color: #FFFFFF
 }
 
 .app-header h1 {
@@ -136,21 +144,22 @@ body {
     align-items: center;
     gap: 2px;
     padding: .25rem .25rem;
-    background: #000000;
+    background: transparent;
     border-right: 1px solid var(--border)
 }
 
 .az-index a {
-    font-size: .75rem;
+    font-size: .78rem;
     text-decoration: none;
-    color: #FFFFFF;
-    padding: .1rem .25rem;
-    border-radius: .25rem
+    color: var(--ink);
+    padding: .12rem .28rem;
+    border-radius: .25rem;
+    font-weight: 600
 }
 
 .az-index a:hover {
-    background: var(--accent);
-    color: #FFFFFF
+    background: var(--chip);
+    color: var(--ink)
 }
 
 
@@ -166,9 +175,9 @@ body {
     position: sticky;
     top: 72px;
     background: var(--sticky);
-    color: #FFFFFF;
+    color: var(--ink);
     padding: .5rem .75rem;
-    border-left: 4px solid #000000;
+    border-left: 4px solid var(--accent);
     margin: .5rem 0 .25rem
 }
 
@@ -180,27 +189,21 @@ body {
 
 
 .card {
-    background: #1b1b1b;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.18) 0%, rgba(0, 0, 0, 0) 28%), var(--card);
     border: 2px solid var(--border);
     border-radius: 1rem;
     padding: .9rem;
     display: grid;
     gap: .5rem;
     color: var(--ink);
-    box-shadow:
-        0 6px 18px rgba(138, 63, 127, .25),
-        /* sombra exterior existente */
-        inset 0 8px 14px -8px rgba(255, 255, 255, .22),
-        /* brillo superior sutil */
-        inset 0 -12px 20px -12px rgba(0, 0, 0, .65) !important;
-    /* sombra inferior */
+    box-shadow: 0 6px 18px rgba(138, 63, 127, .25), inset 0 1px 0 rgba(255, 255, 255, .04), inset 0 -1px 0 rgba(0, 0, 0, .35);
     position: relative
 }
 
 .card h3 {
     margin: 0;
     font-size: 1rem;
-    color: #FFFFFF
+    color: var(--ink)
 }
 
 .meta {
@@ -211,7 +214,7 @@ body {
 
 .chip {
     background: var(--chip);
-    color: #FFFFFF;
+    color: var(--ink);
     padding: .15rem .5rem;
     border-radius: 999px;
     font-size: .75rem;
@@ -219,16 +222,14 @@ body {
 }
 
 .desc {
-    color: #CACACA;
-    font-size: .9rem;
-    letter-spacing: .1px
+    color: var(--muted);
+    font-size: .9rem
 }
 
 .addr {
-    color: #CACACA;
+    color: var(--muted);
     font-size: .9rem;
-    margin-top: .1rem;
-    letter-spacing: .1px
+    margin-top: .1rem
 }
 
 .actions {
@@ -241,12 +242,46 @@ body {
 .actions button {
     font-size: .9rem;
     text-decoration: none;
-    border: 1px solid var(--border);
-    padding: .45rem .6rem;
-    border-radius: .5rem;
-    background: var(--accent);
+    border: 1px solid #1F5D24;
+    padding: .5rem .7rem;
+    border-radius: .6rem;
+    background: var(--cta);
     color: #FFFFFF;
     transition: transform .08s ease, box-shadow .08s ease
+}
+
+.actions a:hover,
+.actions button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(46, 125, 50, .35)
+}
+
+.actions a:active,
+.actions button:active {
+    filter: brightness(.96)
+}
+
+.actions a:focus-visible,
+.actions button:focus-visible {
+    outline: 2px solid #1F5D24;
+    outline-offset: 2px
+}
+
+.actions a:hover,
+.actions button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(214, 255, 0, .35)
+}
+
+.actions a:active,
+.actions button:active {
+    filter: brightness(.96)
+}
+
+.actions a:focus-visible,
+.actions button:focus-visible {
+    outline: 2px solid #FFFFFF;
+    outline-offset: 2px
 }
 
 .actions a:link,
@@ -270,11 +305,15 @@ body {
 .actions a:active,
 .actions a:focus,
 .actions a:focus-visible {
-    background: var(--accent) !important;
+    background: var(--cta) !important;
     color: #FFFFFF !important;
-    border-color: var(--border) !important;
+    border-color: #1F5D24 !important;
     -webkit-text-fill-color: #FFFFFF;
 }
+
+
+
+
 
 
 .actions a:active,
@@ -312,7 +351,7 @@ body {
 
 
 .highlight {
-    background: linear-gradient(transparent 55%, #8A3F7F99 55%)
+    background: linear-gradient(transparent 55%, #E5BC4880 55%)
 }
 
 
@@ -343,15 +382,4 @@ body {
 #splash.is-hidden {
     opacity: 0;
     pointer-events: none
-}
-
-
-@media (max-width:700px) {
-    .content {
-        grid-template-columns: 24px 1fr
-    }
-
-    .section-header {
-        top: 116px
-    }
 }
