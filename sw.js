@@ -5,7 +5,7 @@ const SHELL = [
     '/assets/terra.jpg', '/contacts.json'
 ];
 
-const DEBUG = true;
+const DEBUG = false;
 function log(event, ...args) {
     if (!DEBUG) return;
     // Consola del SW
