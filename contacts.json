@@ -180,6 +180,18 @@
     "stars": 5
   },
   {
+    "service": "Mallas Seguridad",
+    "name": "Protegge - Señor Carlos",
+    "description": "Malla plastica transparente para gatos y niños",
+    "address": "Calle 133 A #19-28",
+    "phone1": "+57 3182597000",
+    "phone2": "",
+    "whatsapp": "+57 3182597000",
+    "website": "https://protegge.com/",
+    "email": "ventas@protegge.com",
+    "stars": 5
+  },
+  {
     "service": "Electrodomésticos",
     "name": "ServiTécnicos",
     "description": "Reparación y mantenimiento de electrodomésticos",
@@ -190,18 +202,6 @@
     "website": "",
     "email": "",
     "stars": 4
-  },
-  {
-    "service": "Mallas Seguridad",
-    "name": "Señor Carlos",
-    "description": "Malla plastica transparente para gatos y niños",
-    "address": "",
-    "phone1": "",
-    "phone2": "",
-    "whatsapp": "+57 3182597000",
-    "website": "",
-    "email": "",
-    "stars": 5
   },
   {
     "service": "Plomeria",
