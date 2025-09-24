@@ -1,83 +1,104 @@
+const VERSION = 'v13-debug';
+const CACHE = `pwa-contactos-${VERSION}`;
 const SHELL = [
-    A('index.html'),
-    A('styles.css'),
-    A('app.js'),
-    A('manifest.webmanifest'),
-    A('assets/terra.jpg'),
+    '/', '/index.html', '/styles.css', '/app.js', '/manifest.webmanifest',
+    '/assets/terra.jpg', '/contacts.json'
 ];
-self.addEventListener('install', (e) => {
+
+const DEBUG = true;
+function log(event, ...args) {
+    if (!DEBUG) return;
+    // Consola del SW
+    console.log('[SW]', event, ...args);
+    // Reenviar a las ventanas para ver en la consola de la página
+    self.clients.matchAll({ includeUncontrolled: true, type: 'window' }).then(cs => {
+        cs.forEach(c => c.postMessage({
+            from: 'sw', event, args: args.map(a => {
+                try { return typeof a === 'string' ? a : JSON.stringify(a); } catch { return String(a); }
+            })
+        }));
+    }).catch(() => { });
+}
+
+self.addEventListener('install', (event) => {
     self.skipWaiting();
-    e.waitUntil((async () => {
-        const c = await caches.open(CACHE);
-        // Si alguno falla, no abortamos toda la instalación
+    event.waitUntil((async () => {
+        const cache = await caches.open(CACHE);
         for (const url of SHELL) {
-            try { await c.add(url); } catch (err) { /* ignora faltantes */ }
-        }
-        // Precacha datos si existe (opcional)
-        for (const p of ['contacts.json']) {
             try {
-                const res = await fetch(A(p), { cache: 'no-store' });
-                if (res.ok) await c.put(A(p), res);
-            } catch { }
+                const req = new Request(url, { cache: 'no-store' });
+                const res = await fetch(req);
+                if (!res.ok) { log('install:not-ok', url, res.status, res.statusText); continue; }
+                await cache.put(req, res.clone());
+                log('install:cached', url);
+            } catch (err) {
+                log('install:ERROR', url, String(err));
+            }
         }
     })());
 });
 
-self.addEventListener('activate', (e) => {
-    e.waitUntil((async () => {
+self.addEventListener('activate', (event) => {
+    event.waitUntil((async () => {
         const keys = await caches.keys();
         await Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)));
         await self.clients.claim();
+        log('activate:ready', CACHE);
     })());
 });
 
-self.addEventListener('fetch', (e) => {
-    const req = e.request;
+self.addEventListener('fetch', (event) => {
+    const req = event.request;
     const url = new URL(req.url);
 
-    // 1) Navegaciones: si no hay red, devolvé index cacheado
+    // Navegaciones
     if (req.mode === 'navigate') {
-        e.respondWith((async () => {
-            try {
-                return await fetch(req);
-            } catch {
-                return (await caches.match(A('index.html'), { ignoreSearch: true })) || Response.error();
-            }
+        event.respondWith((async () => {
+            try { const r = await fetch(req); log('fetch:navigate:net', req.url); return r; }
+            catch { log('fetch:navigate:OFFLINE->index.html'); return (await caches.match('/index.html')) || Response.error(); }
         })());
         return;
     }
 
-    // 2) Estáticos same-origin: cache-first (ignora ?v=)
+    // Estáticos propios
     if (url.origin === self.location.origin && /\.(css|js|png|jpg|jpeg|svg|webp|ico|woff2?)$/i.test(url.pathname)) {
-        e.respondWith((async () => {
+        event.respondWith((async () => {
             const hit = await caches.match(req, { ignoreSearch: true });
-            if (hit) return hit;
+            if (hit) { log('fetch:static:cache', url.pathname); return hit; }
             try {
                 const res = await fetch(req);
                 (await caches.open(CACHE)).put(req, res.clone());
+                log('fetch:static:net->cache', url.pathname);
                 return res;
-            } catch {
-                // En caída, intenta index para no reventar la vista
-                return (await caches.match(A('index.html'), { ignoreSearch: true })) || Response.error();
+            } catch (err) {
+                log('fetch:static:ERROR', url.pathname, String(err));
+                return (await caches.match('/index.html')) || Response.error();
             }
         })());
         return;
     }
 
-    // 3) JSON same-origin: network-first con fallback
+    // JSON propios
     if (url.origin === self.location.origin && url.pathname.endsWith('.json')) {
-        e.respondWith((async () => {
+        event.respondWith((async () => {
             try {
                 const res = await fetch(req);
                 (await caches.open(CACHE)).put(req, res.clone());
+                log('fetch:json:net->cache', url.pathname, res.status);
                 return res;
-            } catch {
-                return (await caches.match(req, { ignoreSearch: true })) || new Response('[]', { headers: { 'Content-Type': 'application/json' } });
+            } catch (err) {
+                const fb = await caches.match(req, { ignoreSearch: true });
+                if (fb) { log('fetch:json:FALLBACK cache', url.pathname); return fb; }
+                log('fetch:json:MISS', url.pathname, String(err));
+                return new Response('[]', { headers: { 'Content-Type': 'application/json' } });
             }
         })());
         return;
     }
 
-    // 4) Resto: red; si falla, intenta caché
-    e.respondWith(fetch(req).catch(() => caches.match(req, { ignoreSearch: true })));
+    // Otros
+    event.respondWith(fetch(req).catch(async (err) => {
+        log('fetch:other:ERROR', req.url, String(err));
+        return (await caches.match(req, { ignoreSearch: true })) || Response.error();
+    }));
 });

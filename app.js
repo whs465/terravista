@@ -31,6 +31,10 @@ el.installBtn?.addEventListener('click', async () => {
 
 // Service worker (sin .then, con auto-update)
 if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.addEventListener('message', (e) => {
+        const { from, event, args } = e.data || {};
+        if (from === 'sw') console.log('[SW msg]', event, ...(args || []));
+    });
     (async () => {
         try {
             const reg = await navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' });
