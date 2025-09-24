@@ -34,18 +34,12 @@ if ('serviceWorker' in navigator) {
     (async () => {
         try {
             const reg = await navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' });
-
-            // Forzar que la nueva versión tome control si ya está esperando
             if (reg.waiting) reg.waiting.postMessage({ type: 'SKIP_WAITING' });
-
-            // Recargar cuando una nueva versión termine de instalarse
             reg.addEventListener('updatefound', () => {
                 const nw = reg.installing;
                 if (!nw) return;
                 nw.addEventListener('statechange', () => {
-                    if (nw.state === 'installed' && navigator.serviceWorker.controller) {
-                        location.reload(); // recarga una vez cuando hay update
-                    }
+                    if (nw.state === 'installed' && navigator.serviceWorker.controller) location.reload();
                 });
             });
         } catch (err) {
