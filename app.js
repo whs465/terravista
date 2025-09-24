@@ -1,4 +1,4 @@
-const DATA_URL = './contacts.json';
+const DATA_URL = '/contacts.json';
 
 const el = {
     search: document.getElementById('search'),

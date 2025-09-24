@@ -1,7 +1,6 @@
 const SHELL = [
     A('index.html'),
     A('styles.css'),
-    A('contacts.json'),
     A('app.js'),
     A('manifest.webmanifest'),
     A('assets/terra.jpg'),
@@ -15,7 +14,7 @@ self.addEventListener('install', (e) => {
             try { await c.add(url); } catch (err) { /* ignora faltantes */ }
         }
         // Precacha datos si existe (opcional)
-        for (const p of ['contacts.json', 'contacts.example.json']) {
+        for (const p of ['contacts.json']) {
             try {
                 const res = await fetch(A(p), { cache: 'no-store' });
                 if (res.ok) await c.put(A(p), res);
