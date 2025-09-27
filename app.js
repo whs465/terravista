@@ -201,7 +201,7 @@ function buildAZ() {
 
 // ===================== POPUP (10s, 1 vez por día, tras el splash) =====================
 (() => {
-    const INFO_SHOW_MS = 10_000;                 // visible por 10s
+    const INFO_SHOW_MS = 16_000;                 // visible por 10s
     const STORAGE_KEY = 'infoPopupLastShownDay';
     const pop = document.getElementById('infoPopup');
     if (!pop) return;
