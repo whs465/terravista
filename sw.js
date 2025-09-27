@@ -1,4 +1,4 @@
-const VERSION = 'v13-debug';
+const VERSION = 'v15-debug';
 const CACHE = `pwa-contactos-${VERSION}`;
 const SHELL = [
     '/', '/index.html', '/styles.css', '/app.js', '/manifest.webmanifest',
