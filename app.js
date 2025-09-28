@@ -139,12 +139,14 @@ function starHTML(n) {
     return `<span class="stars">${Array.from({ length: 5 }, (_, i) => `<span class="star" aria-hidden="true">${i < v ? '★' : '☆'}</span>`).join('')}</span>`;
 }
 
-function telLink(num) { return num ? `<a href="tel:${num}">Tel: ${escapeHTML(num)}</a>` : '' }
+function telLink(num) { return num ? `<a class="btn" href="tel:${num}">Tel: ${escapeHTML(num)}</a>` : '' }
+
 function waLink(num) {
     if (!num) return '';
     const digits = String(num).replace(/\D+/g, '');
-    return `<a href="https://wa.me/${digits}" target="_blank" rel="noopener">WhatsApp</a>`;
+    return `<a class="btn" href="https://wa.me/${digits}" target="_blank" rel="noopener">WhatsApp</a>`;
 }
+
 
 function cardHTML(c, q) {
     return `
@@ -160,8 +162,8 @@ function cardHTML(c, q) {
     ${telLink(c.phone1)}
     ${telLink(c.phone2)}
     ${waLink(c.whatsapp)}
-    ${c.email ? `<a href="mailto:${escapeHTML(c.email)}">Email</a>` : ''}
-    ${c.website ? `<a href="${escapeHTML(c.website)}" target="_blank" rel="noopener">Website</a>` : ''}
+    ${c.email ? `<a class="btn outline" href="mailto:${escapeHTML(c.email)}">Email</a>` : ''}
+    ${c.website ? `<a class="btn outline" href="${escapeHTML(c.website)}" target="_blank" rel="noopener">Website</a>` : ''}
   </div>
 </article>`;
 }

@@ -69,16 +69,6 @@ body {
     margin: 0
 }
 
-.btn {
-    border: 1px solid var(--border);
-    background: var(--accent);
-    color: #FFFFFF;
-    padding: .5rem .75rem;
-    border-radius: .75rem;
-    cursor: pointer;
-    box-shadow: 0 2px 8px rgba(138, 63, 127, .35)
-}
-
 .btn.ghost {
     background: transparent;
     border: 1px solid #FFFFFF;
@@ -499,4 +489,58 @@ body {
 .pop-btn.success:focus-visible {
     outline: 2px solid var(--cta-success);
     outline-offset: 2px;
+}
+
+.btn {
+    appearance: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .45rem;
+    background: var(--btn-bg);
+    color: var(--btn-ink);
+    border: 1px solid var(--btn-border);
+    border-radius: .65rem;
+    padding: .55rem .9rem;
+    font: 500 14px/1.1 system-ui, -apple-system, Roboto, "Segoe UI", Arial, sans-serif;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .10);
+    transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 3px 9px rgba(0, 0, 0, .15);
+    filter: brightness(.98);
+}
+
+.btn:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .12);
+    filter: brightness(.94);
+}
+
+.btn:focus-visible {
+    outline: 2px solid var(--btn-bg);
+    outline-offset: 2px;
+}
+
+.btn.outline {
+    background: transparent;
+    color: var(--btn-bg);
+    border-color: var(--btn-bg);
+}
+
+/* separaciones en tarjetas y popup */
+.actions .btn {
+    margin-right: .4rem;
+}
+
+.actions .btn:last-child {
+    margin-right: 0;
+}
+
+.pop-actions .btn {
+    min-width: 120px;
 }
