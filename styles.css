@@ -544,3 +544,85 @@ body {
 .pop-actions .btn {
     min-width: 120px;
 }
+
+/* ===== Fix: botones no se deforman en pantallas grandes ===== */
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .6rem;
+    align-items: center;
+}
+
+.actions .btn {
+    flex: 0 0 auto;
+    /* no crecer ni encogerse */
+    width: auto !important;
+    /* pisa cualquier width:100% heredado */
+    white-space: nowrap;
+    /* evita salto de línea dentro del botón */
+    min-height: 38px;
+    /* altura consistente */
+    border-radius: .75rem;
+    /* pill prolijo */
+    max-width: 100%;
+}
+
+/* Opcional: darle un ancho mínimo prolijo en desktop */
+@media (min-width: 1024px) {
+    .actions .btn {
+        min-width: 150px;
+        justify-content: center;
+    }
+
+    .actions .btn.outline {
+        min-width: 120px;
+    }
+}
+
+/* Popup (por si también estiraba) */
+.pop-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .6rem;
+    justify-content: center;
+}
+
+.pop-actions .btn {
+    flex: 0 0 auto;
+    min-width: 140px;
+    width: auto !important;
+    white-space: nowrap;
+}
+
+/* ==== Fix chip de Servicio (no stretch, 1 línea, theme) ==== */
+.meta {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    flex-wrap: wrap;
+}
+
+.meta .chip {
+    display: inline-flex;
+    align-items: center;
+    flex: 0 0 auto;
+    /* no crecer */
+    padding: .28rem .70rem;
+    border-radius: 9999px;
+    /* pill */
+    white-space: nowrap;
+    /* evita salto */
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.meta .stars {
+    margin-left: auto;
+}
+
+@media (min-width:1024px) {
+    .meta .chip {
+        font-size: .84rem;
+        padding: .30rem .80rem;
+    }
+}
