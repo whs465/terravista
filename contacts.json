@@ -84,6 +84,18 @@
         "stars": 4
     },
     {
+        "service": "Ferretería",
+        "name": "Ferrezeta",
+        "description": "🪚🔩 Mateiales, herramientas, pinturas, tonilleria",
+        "address": "Calle 164 # 8H - 22",
+        "phone1": "+57 3219169800",
+        "phone2": "",
+        "whatsapp": "+57 3219169800",
+        "website": "https://ferrezeta.com/",
+        "email": "ferrezetaservicioalcliente@gmail.com",
+        "stars": 5
+    },
+    {
         "service": "Gas",
         "name": "Fredy Garcia",
         "description": "Calentadores Andino. Servicio técnico en gasodomesticos.",
