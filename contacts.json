@@ -72,6 +72,18 @@
     "stars": 5
   },
   {
+    "service": "Electronica",
+    "name": "Electronica Minimarket",
+    "description": "Tienda de componentes para proyectos de electrónica",
+    "address": "Cra 8H # 163 A-50",
+    "phone1": "+57 3134556000",
+    "phone2": "",
+    "whatsapp": "'+57 3134556000",
+    "website": "",
+    "email": "electronicaminimarket@gmail.com",
+    "stars": 5
+  },
+  {
     "service": "Electrodomésticos",
     "name": "Eugenio Mosquera",
     "description": "Reparación neveras y lavadoras",
@@ -184,7 +196,7 @@
     "name": "Pizza Pauzza",
     "description": "Pizzeria🍕",
     "address": "",
-    "phone1": "+57 6014754141",
+    "phone1": "6014754141",
     "phone2": "+57 3123659000",
     "whatsapp": "",
     "website": "",
@@ -247,6 +259,18 @@
     "phone1": "+57 30153866",
     "phone2": "",
     "whatsapp": "",
+    "website": "",
+    "email": "",
+    "stars": 5
+  },
+  {
+    "service": "Supermercado",
+    "name": "Supermercado La Vid",
+    "description": "Frutas carnes, verduras, abarrotes y mucho mas.",
+    "address": "Calle 166 # 8f - 45",
+    "phone1": "6019073636",
+    "phone2": "",
+    "whatsapp": "+57 3214616299",
     "website": "",
     "email": "",
     "stars": 5
