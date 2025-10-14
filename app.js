@@ -203,6 +203,7 @@ function buildAZ() {
 
 // ===================== POPUP (10s, 1 vez por día, tras el splash) =====================
 (() => {
+    const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
     const INFO_SHOW_MS = 16_000;                 // visible por 10s
     const STORAGE_KEY = 'infoPopupLastShownDay';
     const pop = document.getElementById('infoPopup');
@@ -219,9 +220,14 @@ function buildAZ() {
         const d = new Date();
         return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
     };
+
     const shouldShow = () => {
-        try { return (localStorage.getItem(STORAGE_KEY) || '') !== todayKey(); }
-        catch { return true; }
+        try {
+            const last = Number(localStorage.getItem(STORAGE_KEY) || 0);
+            return (Date.now() - last) >= WEEK_MS;   // si pasaron 7 días, mostrás
+        } catch {
+            return true;
+        }
     };
 
     let timer;
@@ -237,7 +243,7 @@ function buildAZ() {
         timer = setTimeout(hide, INFO_SHOW_MS);
         document.addEventListener('keydown', onEsc);
         pop.addEventListener('click', onBackdrop);
-        try { localStorage.setItem(STORAGE_KEY, todayKey()); } catch { }
+        try { localStorage.setItem(STORAGE_KEY, String(Date.now())); } catch { }
     };
     const onEsc = (e) => { if (e.key === 'Escape') hide(); };
     const onBackdrop = (e) => { if (e.target === pop) hide(); };
