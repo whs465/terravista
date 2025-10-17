@@ -36,6 +36,18 @@
     "stars": 4
   },
   {
+    "service": "Cortinas",
+    "name": "Carlos Lopez",
+    "description": "Cortinas, lavado, mantenimiento y reparaciones",
+    "address": "",
+    "phone1": "+57 3112588032",
+    "phone2": "",
+    "whatsapp": "+57 3112588032",
+    "website": "",
+    "email": "",
+    "stars": 5
+  },
+  {
     "service": "Cerrajeria",
     "name": "Cerrajeria la 165",
     "description": "🔐",
@@ -57,6 +69,18 @@
     "whatsapp": "",
     "website": "",
     "email": "clinicaveterinaria@lasalle.edu.co",
+    "stars": 5
+  },
+  {
+    "service": "Cortinas",
+    "name": "Cortinas la 170",
+    "description": "Cortinas, lavado, mantenimiento y reparaciones",
+    "address": "Cra 20 # 169 - 70",
+    "phone1": "+57 3125350871",
+    "phone2": "",
+    "whatsapp": "+57 3125350871",
+    "website": "",
+    "email": "",
     "stars": 5
   },
   {
@@ -98,7 +122,7 @@
   {
     "service": "Ferretería",
     "name": "Ferrezeta",
-    "description": "🪚🔩 Mateiales, herramientas, pinturas, tonilleria",
+    "description": "🪚🔩 Materiales, herramientas, pinturas, tornilleria",
     "address": "Calle 164 # 8H - 22",
     "phone1": "+57 3219169800",
     "phone2": "",
@@ -261,6 +285,18 @@
     "whatsapp": "",
     "website": "",
     "email": "",
+    "stars": 5
+  },
+  {
+    "service": "Electrodomésticos",
+    "name": "Soluciones Audiovisuales",
+    "description": "Reparación y venta de televisores de todas las marcas",
+    "address": "Cra 49b # 171 A - 02",
+    "phone1": "+57 3193441684",
+    "phone2": "",
+    "whatsapp": "+57 3193441684",
+    "website": "",
+    "email": "solucionesaudiovisuales2018@gmail.com",
     "stars": 5
   },
   {
