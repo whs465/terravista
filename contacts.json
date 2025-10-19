@@ -264,6 +264,18 @@
     "stars": 5
   },
   {
+    "service": "Transporte",
+    "name": "Servicios de Transporte",
+    "description": "Servicio de transporte de pasajeros, individual,  grupos y mercancias.🚗 ⛟",
+    "address": "",
+    "phone1": "+57 3106994063",
+    "phone2": "",
+    "whatsapp": "+57 3106994063",
+    "website": "",
+    "email": "",
+    "stars": 5
+  },
+  {
     "service": "Electrodomésticos",
     "name": "ServiTécnicos",
     "description": "Reparación y mantenimiento de electrodomésticos",
