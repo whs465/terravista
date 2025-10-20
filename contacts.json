@@ -36,6 +36,18 @@
     "stars": 4
   },
   {
+    "service": "Plomeria",
+    "name": "Calentador y plomeria",
+    "description": "Trabajos de calentador y plomeria 🪠",
+    "address": "",
+    "phone1": "+57 3153005747",
+    "phone2": "",
+    "whatsapp": "",
+    "website": "",
+    "email": "",
+    "stars": 5
+  },
+  {
     "service": "Cortinas",
     "name": "Carlos Lopez",
     "description": "Cortinas, lavado, mantenimiento y reparaciones",
@@ -294,7 +306,7 @@
     "address": "",
     "phone1": "+57 3015386674",
     "phone2": "",
-    "whatsapp": "+57 3015386674",
+    "whatsapp": "",
     "website": "",
     "email": "",
     "stars": 5
