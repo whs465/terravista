@@ -12,6 +12,18 @@
     "stars": 4
   },
   {
+    "service": "Quejas",
+    "name": "Alcaldía de Usaquén",
+    "description": "Derechos de petición a la Alcadía de Usaquén para recuperación de espacio público. Enviar petición con fotos de soporte.",
+    "address": "",
+    "phone1": "",
+    "phone2": "",
+    "whatsapp": "",
+    "website": "denuncias@gobiernobogota.gov.co",
+    "email": "defensorciudadanoSDG@gobiernobogota.gov.co",
+    "stars": 5
+  },
+  {
     "service": "Pizza",
     "name": "Andrus Pizza",
     "description": "Pizzeria y ristorante 🍕🍝",
@@ -19,6 +31,18 @@
     "phone1": "+57 3222919154",
     "phone2": "",
     "whatsapp": "",
+    "website": "",
+    "email": "",
+    "stars": 5
+  },
+  {
+    "service": "Arepas",
+    "name": "Anita's food company",
+    "description": "Arepas 🫓",
+    "address": "Calle 166 # 8f - 41",
+    "phone1": "+57 3012729469",
+    "phone2": "",
+    "whatsapp": "+57 3012729469",
     "website": "",
     "email": "",
     "stars": 5
@@ -38,7 +62,7 @@
   {
     "service": "Plomeria",
     "name": "Calentador y plomeria",
-    "description": "Trabajos de calentador y plomeria 🪠",
+    "description": "Trabajos de calentador y plomeria 🪠 Señor Jose Antonio",
     "address": "",
     "phone1": "+57 3153005747",
     "phone2": "",
@@ -165,6 +189,30 @@
     "whatsapp": "+57 3118135035",
     "website": "",
     "email": "gomezcaicedofotografia@gmail.com",
+    "stars": 5
+  },
+  {
+    "service": "Contador",
+    "name": "Jorge Pongutá",
+    "description": "Llevar la contabilidad, preparar impuestos, elaborar estados financieros, asesorar en temas fiscales y financieros",
+    "address": "",
+    "phone1": "+57 3153361840",
+    "phone2": "",
+    "whatsapp": "",
+    "website": "",
+    "email": "",
+    "stars": 5
+  },
+  {
+    "service": "Contador",
+    "name": "Juan Pablo Mora",
+    "description": "Llevar la contabilidad, preparar impuestos, elaborar estados financieros, asesorar en temas fiscales y financieros",
+    "address": "",
+    "phone1": "+57 3134048108",
+    "phone2": "",
+    "whatsapp": "",
+    "website": "",
+    "email": "",
     "stars": 5
   },
   {
@@ -302,7 +350,7 @@
   {
     "service": "Plomeria",
     "name": "Señor Jose",
-    "description": "🪠",
+    "description": "Trabajos de plomeria 🪠",
     "address": "",
     "phone1": "+57 3015386674",
     "phone2": "",
@@ -357,6 +405,18 @@
     "whatsapp": "+57 3154164164",
     "website": "",
     "email": "servicioalcliente@grupovanti.com",
+    "stars": 5
+  },
+  {
+    "service": "Contador",
+    "name": "Vilma Contadora",
+    "description": "Llevar la contabilidad, preparar impuestos, elaborar estados financieros, asesorar en temas fiscales y financieros",
+    "address": "",
+    "phone1": "+57 3004946151",
+    "phone2": "",
+    "whatsapp": "+57 3004946151",
+    "website": "",
+    "email": "",
     "stars": 5
   }
 ]
