@@ -24,6 +24,18 @@
     "stars": 5
   },
   {
+    "service": "Rampa Baño",
+    "name": "Alfonso Garzón",
+    "description": "Maestro que hace las rampas para el baño",
+    "address": "",
+    "phone1": "+57 3213433919",
+    "phone2": "",
+    "whatsapp": "+57 3213433919",
+    "website": "",
+    "email": "",
+    "stars": 5
+  },
+  {
     "service": "Pizza",
     "name": "Andrus Pizza",
     "description": "Pizzeria y ristorante 🍕🍝",
@@ -276,6 +288,30 @@
     "stars": 5
   },
   {
+    "service": "Arroz Chino",
+    "name": "Moneda de Oro",
+    "description": "Arroz Chino 🍜",
+    "address": "",
+    "phone1": "+57 3112861995",
+    "phone2": "",
+    "whatsapp": "+57 3112861995",
+    "website": "",
+    "email": "",
+    "stars": 0
+  },
+  {
+    "service": "Pago Administración",
+    "name": "Pago Administración Terravista",
+    "description": "Pagos electrónicos Scotiabank Colpatria",
+    "address": "",
+    "phone1": "",
+    "phone2": "",
+    "whatsapp": "",
+    "website": "https://www.banco.scotiabankcolpatria.com/PagosElectronicos/AgreementList.aspx",
+    "email": "",
+    "stars": 0
+  },
+  {
     "service": "Paseo Perros",
     "name": "Patitas",
     "description": "Paseos 🐶",
@@ -349,6 +385,18 @@
   },
   {
     "service": "Electrodomésticos",
+    "name": "Servimos Norte - Ramón Ruíz",
+    "description": "Reparación y mantenimiento de electrodomésticos",
+    "address": "",
+    "phone1": "+57 3125846294",
+    "phone2": "",
+    "whatsapp": "",
+    "website": "",
+    "email": "",
+    "stars": 0
+  },
+  {
+    "service": "Electrodomésticos",
     "name": "ServiTécnicos",
     "description": "Reparación y mantenimiento de electrodomésticos",
     "address": "Cra 111 A # 151 C 25",
@@ -384,6 +432,18 @@
     "stars": 5
   },
   {
+    "service": "Computadores",
+    "name": "Soporte Computacional",
+    "description": "Revisión y reparación de computadores, Redes - Ing. Juan Pablo",
+    "address": "",
+    "phone1": "",
+    "phone2": "",
+    "whatsapp": "+57 3177871905",
+    "website": "",
+    "email": "",
+    "stars": 0
+  },
+  {
     "service": "Supermercado",
     "name": "Supermercado La Vid",
     "description": "Frutas carnes, verduras, abarrotes y mucho mas.",
@@ -417,6 +477,18 @@
     "whatsapp": "+57 3154164164",
     "website": "",
     "email": "servicioalcliente@grupovanti.com",
+    "stars": 5
+  },
+  {
+    "service": "Vidrios",
+    "name": "Vidrios y Aluminios Sanchez",
+    "description": "Ventaneria Termiacustica, Divisiones de baño, Peliculas de Seguridad, Vidrios y Espejos",
+    "address": "",
+    "phone1": "+57 3144112389",
+    "phone2": "",
+    "whatsapp": "+57 3144112389",
+    "website": "",
+    "email": "",
     "stars": 5
   },
   {
