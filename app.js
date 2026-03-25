@@ -11,8 +11,6 @@ const APP_SHARE_URL = 'https://terravista166.vercel.app/';
 const el = {
     search: document.getElementById('search'),
     sortBy: document.getElementById('sortBy'),
-    minStars: document.getElementById('minStars'),
-    minStarsOut: document.getElementById('minStarsOut'),
     list: document.getElementById('list'),
     azIndex: document.getElementById('azIndex'),
     installBtn: document.getElementById('installBtn'),
@@ -73,8 +71,7 @@ fetch(DATA_URL)
         render();
     });
 
-[el.search, el.sortBy, el.minStars].forEach(i => i.addEventListener('input', render));
-el.minStars.addEventListener('input', () => el.minStarsOut.textContent = el.minStars.value);
+['search', 'sortBy'].forEach(key => el[key].addEventListener('input', render));
 el.quickFilters?.addEventListener('click', onQuickFilterClick);
 document.addEventListener('click', onDocumentClick);
 
@@ -92,10 +89,8 @@ function render() {
 
     const q = normalize(el.search.value);
     const sortBy = el.sortBy.value;
-    const minStars = parseInt(el.minStars.value, 10) || 0;
 
     const data = raw
-        .filter(c => (c.stars ?? 0) >= minStars)
         .filter(c => matchesQuery(c, q))
         .filter(c => matchesActiveFilter(c))
         .slice()
@@ -143,11 +138,6 @@ function escapeHTML(s) {
         .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
 }
 
-function starHTML(n) {
-    const v = Math.max(0, Math.min(5, n | 0));
-    return `<span class="stars">${Array.from({ length: 5 }, (_, i) => `<span class="star" aria-hidden="true">${i < v ? '★' : '☆'}</span>`).join('')}</span>`;
-}
-
 function telLink(num) { return num ? `<a class="btn" href="tel:${num}">Tel: ${escapeHTML(num)}</a>` : '' }
 
 function waLink(num) {
@@ -175,7 +165,6 @@ function cardHTML(c, q) {
   <h3>${highlight(c.name || '', q)}</h3>
   <div class="meta">
     <span class="chip">${escapeHTML(c.service || 'Servicio')}</span>
-    <span title="Calificación">${starHTML(c.stars || 0)}</span>
   </div>
   ${c.description ? `<p class="desc">${highlight(c.description, q)}</p>` : ''}
   ${c.address ? `<p class="addr">📍 ${highlight(c.address, q)}</p>` : ''}
