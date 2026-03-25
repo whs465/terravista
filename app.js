@@ -23,6 +23,7 @@ let deferredPrompt = null;
 let activeFilter = 'all';
 let favorites = loadFavorites();
 let activeLetters = [];
+let listAnimationTimer = null;
 
 window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
@@ -86,6 +87,8 @@ function matchesQuery(c, q) {
 }
 
 function render() {
+    animateListRefresh();
+
     const q = normalize(el.search.value);
     const sortBy = el.sortBy.value;
     const minStars = parseInt(el.minStars.value, 10) || 0;
@@ -149,7 +152,7 @@ function telLink(num) { return num ? `<a class="btn" href="tel:${num}">Tel: ${es
 function waLink(num) {
     if (!num) return '';
     const digits = String(num).replace(/\D+/g, '');
-    return `<a class="btn" href="https://wa.me/${digits}" target="_blank" rel="noopener">WhatsApp</a>`;
+    return `<a class="btn btn-primary" href="https://wa.me/${digits}" target="_blank" rel="noopener">WhatsApp</a>`;
 }
 
 
@@ -173,7 +176,7 @@ function cardHTML(c, q) {
     ${telLink(c.phone2)}
     ${waLink(c.whatsapp)}
     ${c.email ? `<a class="btn outline" href="mailto:${escapeHTML(c.email)}">Email</a>` : ''}
-    ${c.website ? `<a class="btn outline" href="${escapeHTML(c.website)}" target="_blank" rel="noopener">Website</a>` : ''}
+    ${c.website ? `<a class="btn outline" href="${escapeHTML(c.website)}" target="_blank" rel="noopener">Web</a>` : ''}
   </div>
 </article>`;
 }
@@ -236,17 +239,20 @@ function onQuickFilterClick(event) {
 function onDocumentClick(event) {
     const favoriteButton = event.target.closest('[data-favorite-toggle]');
     if (!favoriteButton) return;
-    toggleFavorite(favoriteButton.dataset.favoriteToggle || '');
+    const activated = toggleFavorite(favoriteButton.dataset.favoriteToggle || '');
+    if (activated) pulseFavoriteButtons(favoriteButton.dataset.favoriteToggle || '');
 }
 
 function toggleFavorite(id) {
     if (!id) return;
+    const isAdding = !favorites.includes(id);
     favorites = favorites.includes(id)
         ? favorites.filter(favoriteId => favoriteId !== id)
         : [id, ...favorites];
     saveFavorites();
     renderQuickFilters();
     render();
+    return isAdding;
 }
 
 function contactId(contact) {
@@ -269,6 +275,28 @@ function saveFavorites() {
     try {
         localStorage.setItem('terravista:favorites', JSON.stringify(favorites));
     } catch { }
+}
+
+function animateListRefresh() {
+    if (!el.list) return;
+    el.list.classList.remove('is-refreshing');
+    void el.list.offsetWidth;
+    el.list.classList.add('is-refreshing');
+    window.clearTimeout(listAnimationTimer);
+    listAnimationTimer = window.setTimeout(() => {
+        el.list.classList.remove('is-refreshing');
+    }, 240);
+}
+
+function pulseFavoriteButtons(id) {
+    requestAnimationFrame(() => {
+        document.querySelectorAll(`[data-favorite-toggle="${CSS.escape(id)}"]`).forEach(button => {
+            button.classList.remove('is-popping');
+            void button.offsetWidth;
+            button.classList.add('is-popping');
+            window.setTimeout(() => button.classList.remove('is-popping'), 380);
+        });
+    });
 }
 
 (() => {
