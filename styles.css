@@ -259,30 +259,7 @@ body::after {
     color: var(--ink);
     box-shadow: 0 6px 18px rgba(138, 63, 127, .25), inset 0 1px 0 rgba(255, 255, 255, .04), inset 0 -1px 0 rgba(0, 0, 0, .35);
     position: relative;
-    overflow: hidden;
     transition: transform .14s ease, box-shadow .14s ease, border-color .14s ease
-}
-
-.card::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background:
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 420 300'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cpath d='M52 272C148 243 230 197 304 128c38-35 70-74 95-117' stroke='%23A7772C' stroke-width='7' stroke-linecap='round' opacity='.34'/%3E%3Cpath d='M166 211c-31-27-66-45-105-54M210 180c-47-20-89-31-130-31M256 144c-47-8-89-6-131 7M301 107c-35 4-67 15-98 35M226 167c24-34 54-60 89-79M186 197c22-25 48-45 80-63M144 222c17-19 37-34 61-47' stroke='%23D1B06B' stroke-width='3.4' stroke-linecap='round' opacity='.36'/%3E%3C/g%3E%3C/svg%3E")
-        no-repeat right -10px bottom -2px / 235px auto;
-    opacity: .42;
-}
-
-.card:nth-child(3n + 2)::before {
-    background-position: left -16px top -2px;
-    background-size: 210px auto;
-    transform: scaleX(-1);
-}
-
-.card:nth-child(3n)::before {
-    background-position: right -18px center;
-    background-size: 245px auto;
 }
 
 .card:hover {
