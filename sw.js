@@ -1,9 +1,15 @@
-const VERSION = 'v16-debug';
+const VERSION = 'v19-favorites-filter';
 const CACHE = `pwa-contactos-${VERSION}`;
+const BASE = new URL(self.registration.scope);
 const SHELL = [
-    '/', '/index.html', '/styles.css', '/app.js', '/manifest.webmanifest',
-    '/assets/terra.jpg', '/contacts.json'
-];
+    '',
+    'index.html',
+    'styles.css',
+    'app.js',
+    'manifest.webmanifest',
+    'assets/terra.jpg',
+    'contacts.json'
+].map((path) => new URL(path, BASE).toString());
 
 const DEBUG = false;
 function log(event, ...args) {
@@ -55,7 +61,10 @@ self.addEventListener('fetch', (event) => {
     if (req.mode === 'navigate') {
         event.respondWith((async () => {
             try { const r = await fetch(req); log('fetch:navigate:net', req.url); return r; }
-            catch { log('fetch:navigate:OFFLINE->index.html'); return (await caches.match('/index.html')) || Response.error(); }
+            catch {
+                log('fetch:navigate:OFFLINE->index.html');
+                return (await caches.match(new URL('index.html', BASE).toString())) || Response.error();
+            }
         })());
         return;
     }
@@ -72,7 +81,7 @@ self.addEventListener('fetch', (event) => {
                 return res;
             } catch (err) {
                 log('fetch:static:ERROR', url.pathname, String(err));
-                return (await caches.match('/index.html')) || Response.error();
+                return (await caches.match(new URL('index.html', BASE).toString())) || Response.error();
             }
         })());
         return;

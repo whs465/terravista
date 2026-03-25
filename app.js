@@ -1,15 +1,11 @@
-// ===================== CONFIG & ELEMENTOS =====================
-// ---- HOTFIX legacy: evita ReferenceError si alguna versión vieja llama safeShow() ----
 window.safeShow = window.safeShow || function () {
     const pop = document.getElementById('infoPopup');
     if (!pop) return;
     pop.classList.remove('is-hidden');
-    // autocierre a los 10s (igual que el popup real)
     setTimeout(() => pop.classList.add('is-hidden'), 15000);
 };
-console.log('app.js hotfix loaded');  // para verificar que esta versión cargó
 
-const DATA_URL = '/contacts.json';
+const DATA_URL = new URL('./contacts.json', window.location.href).toString();
 
 const el = {
     search: document.getElementById('search'),
@@ -19,12 +15,15 @@ const el = {
     list: document.getElementById('list'),
     azIndex: document.getElementById('azIndex'),
     installBtn: document.getElementById('installBtn'),
+    quickFilters: document.getElementById('quickFilters'),
 };
 
 let raw = [];
 let deferredPrompt = null;
+let activeFilter = 'all';
+let favorites = loadFavorites();
+let activeLetters = [];
 
-// ===================== A2HS =====================
 window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
@@ -39,7 +38,6 @@ el.installBtn?.addEventListener('click', async () => {
     el.installBtn.hidden = true;
 });
 
-// ===================== SERVICE WORKER (único) =====================
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.addEventListener('message', (e) => {
         const { from, event, args } = e.data || {};
@@ -63,21 +61,21 @@ if ('serviceWorker' in navigator) {
     })();
 }
 
-// ===================== CARGA DE DATOS =====================
 fetch(DATA_URL)
     .then(r => r.json())
-    .then(json => { raw = json; render(); buildAZ(); })
+    .then(json => { raw = json; renderQuickFilters(); render(); buildAZ(); })
     .catch(err => {
         console.error('No se pudo cargar contacts.json', err);
         raw = [];
+        renderQuickFilters();
         render();
     });
 
-// ===================== FILTROS =====================
 [el.search, el.sortBy, el.minStars].forEach(i => i.addEventListener('input', render));
 el.minStars.addEventListener('input', () => el.minStarsOut.textContent = el.minStars.value);
+el.quickFilters?.addEventListener('click', onQuickFilterClick);
+document.addEventListener('click', onDocumentClick);
 
-// ===================== HELPERS DE RENDER =====================
 function normalize(s) { return (s || '').toString().toLowerCase(); }
 
 function matchesQuery(c, q) {
@@ -89,17 +87,17 @@ function matchesQuery(c, q) {
 
 function render() {
     const q = normalize(el.search.value);
-    const sortBy = el.sortBy.value;       // 'name' | 'service'
+    const sortBy = el.sortBy.value;
     const minStars = parseInt(el.minStars.value, 10) || 0;
 
     const data = raw
         .filter(c => (c.stars ?? 0) >= minStars)
         .filter(c => matchesQuery(c, q))
+        .filter(c => matchesActiveFilter(c))
         .slice()
         .sort((a, b) => normalize(a[sortBy]).localeCompare(normalize(b[sortBy])) ||
             normalize(a.name).localeCompare(normalize(b.name)));
 
-    // Agrupar por letra inicial
     const groups = {};
     for (const c of data) {
         const key = (normalize(c[sortBy])[0] || '#').toUpperCase();
@@ -107,7 +105,14 @@ function render() {
     }
 
     const letters = Object.keys(groups).sort();
+    activeLetters = letters;
+    if (!letters.length) {
+        el.list.innerHTML = emptyStateHTML();
+        buildAZ();
+        return;
+    }
     el.list.innerHTML = letters.map(letter => sectionHTML(letter, groups[letter], q)).join('');
+    buildAZ();
 }
 
 function sectionHTML(letter, items, q) {
@@ -149,8 +154,13 @@ function waLink(num) {
 
 
 function cardHTML(c, q) {
+    const id = contactId(c);
+    const isFavorite = favorites.includes(id);
     return `
 <article class="card">
+  <button class="favorite-toggle ${isFavorite ? 'is-active' : ''}" type="button" data-favorite-toggle="${id}" aria-label="${isFavorite ? 'Quitar de favoritos' : 'Guardar en favoritos'}" aria-pressed="${isFavorite}">
+    <span aria-hidden="true">${isFavorite ? '★' : '☆'}</span>
+  </button>
   <h3>${highlight(c.name || '', q)}</h3>
   <div class="meta">
     <span class="chip">${escapeHTML(c.service || 'Servicio')}</span>
@@ -170,10 +180,97 @@ function cardHTML(c, q) {
 
 function buildAZ() {
     const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-    el.azIndex.innerHTML = letters.map(L => `<a href="#${L}">${L}</a>`).join('');
+    const enabled = new Set(activeLetters);
+    el.azIndex.innerHTML = letters.map(L => `
+<a href="#${L}" class="${enabled.has(L) ? '' : 'is-disabled'}" aria-disabled="${enabled.has(L) ? 'false' : 'true'}">${L}</a>`).join('');
 }
 
-// ===================== SPLASH (2s) + EVENTO =====================
+function emptyStateHTML() {
+    if (activeFilter === 'favorites' && favorites.length === 0) {
+        return `
+<section class="empty-state">
+  <h2>Aún no tienes favoritos</h2>
+  <p>Marca contactos con la estrella de cada tarjeta y aparecerán aquí.</p>
+</section>`;
+    }
+
+    return `
+<section class="empty-state">
+  <h2>No encontramos resultados</h2>
+  <p>Prueba con otro término de búsqueda o baja el filtro de estrellas.</p>
+</section>`;
+}
+
+function renderQuickFilters() {
+    if (!el.quickFilters) return;
+    const services = Array.from(new Set(raw.map(c => (c.service || '').trim()).filter(Boolean)))
+        .sort((a, b) => a.localeCompare(b, 'es'));
+    const favoriteCount = favorites.length;
+    const buttons = [
+        { key: 'favorites', label: favoriteCount ? `★ ${favoriteCount}` : '★', ariaLabel: 'Favoritos' },
+        { key: 'all', label: 'Todo' },
+        ...services.map(service => ({ key: `service:${service}`, label: service })),
+    ];
+
+    el.quickFilters.innerHTML = buttons.map(({ key, label, ariaLabel }) => `
+<button type="button" class="quick-filter ${key === 'favorites' ? 'quick-filter-icon' : ''} ${key === 'favorites' && favoriteCount ? 'has-saved' : ''} ${activeFilter === key ? 'is-active' : ''}" data-filter="${escapeHTML(key)}" aria-label="${escapeHTML(ariaLabel || label)}" title="${escapeHTML(ariaLabel || label)}">
+  ${escapeHTML(label)}
+</button>`).join('');
+}
+
+function matchesActiveFilter(contact) {
+    if (activeFilter === 'all') return true;
+    if (activeFilter === 'favorites') return favorites.includes(contactId(contact));
+    if (activeFilter.startsWith('service:')) return (contact.service || '') === activeFilter.slice(8);
+    return true;
+}
+
+function onQuickFilterClick(event) {
+    const button = event.target.closest('[data-filter]');
+    if (!button) return;
+    activeFilter = button.dataset.filter || 'all';
+    renderQuickFilters();
+    render();
+}
+
+function onDocumentClick(event) {
+    const favoriteButton = event.target.closest('[data-favorite-toggle]');
+    if (!favoriteButton) return;
+    toggleFavorite(favoriteButton.dataset.favoriteToggle || '');
+}
+
+function toggleFavorite(id) {
+    if (!id) return;
+    favorites = favorites.includes(id)
+        ? favorites.filter(favoriteId => favoriteId !== id)
+        : [id, ...favorites];
+    saveFavorites();
+    renderQuickFilters();
+    render();
+}
+
+function contactId(contact) {
+    return [contact.service, contact.name, contact.phone1 || contact.whatsapp || contact.email || '']
+        .map(normalize)
+        .filter(Boolean)
+        .join('::');
+}
+
+function loadFavorites() {
+    try {
+        const saved = JSON.parse(localStorage.getItem('terravista:favorites') || '[]');
+        return Array.isArray(saved) ? saved : [];
+    } catch {
+        return [];
+    }
+}
+
+function saveFavorites() {
+    try {
+        localStorage.setItem('terravista:favorites', JSON.stringify(favorites));
+    } catch { }
+}
+
 (() => {
     const SPLASH_MIN_MS = 2000;
     const start = performance.now();
@@ -188,7 +285,7 @@ function buildAZ() {
         node.classList.add('is-hidden');
         const done = () => { node.removeEventListener('transitionend', done); finish(); };
         node.addEventListener('transitionend', done);
-        setTimeout(done, 600); // por si no hay transición
+        setTimeout(done, 600);
     };
 
     const go = () => {
@@ -200,31 +297,24 @@ function buildAZ() {
     else window.addEventListener('load', go);
 })();
 
-
-// ===================== POPUP (10s, 1 vez por día, tras el splash) =====================
 (() => {
     const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
-    const INFO_SHOW_MS = 16_000;                 // visible por 10s
+    const INFO_SHOW_MS = 16000;
     const STORAGE_KEY = 'infoPopupLastShownDay';
     const pop = document.getElementById('infoPopup');
     if (!pop) return;
 
     const ok = document.getElementById('popDismiss');
     const link = document.getElementById('whatsGroup');
-    const WHATSAPP_GROUP_URL = '';               // ← poné el link del grupo (o dejá vacío para ocultar el botón)
+    const WHATSAPP_GROUP_URL = '';
 
     if (!WHATSAPP_GROUP_URL && link) link.remove();
     if (WHATSAPP_GROUP_URL && link) link.href = WHATSAPP_GROUP_URL;
 
-    const todayKey = () => {
-        const d = new Date();
-        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-    };
-
     const shouldShow = () => {
         try {
             const last = Number(localStorage.getItem(STORAGE_KEY) || 0);
-            return (Date.now() - last) >= WEEK_MS;   // si pasaron 7 días, mostrás
+            return (Date.now() - last) >= WEEK_MS;
         } catch {
             return true;
         }
@@ -250,13 +340,11 @@ function buildAZ() {
     ok?.addEventListener('click', hide);
 
 
-    // Exponer para legacy/debug:
     window.__showInfoPopup = show;
     window.__hideInfoPopup = hide;
-    window.safeShow = () => show();   // shim: si algo llama safeShow(), usa show()
+    window.safeShow = () => show();
 
-    // --- Arranque: NO mostrar al toque del splash ---
-    const DEFER_MS = 5000; // ⬅️ espera mínima tras el splash (ajustá a gusto)
+    const DEFER_MS = 5000;
 
     const armPopup = () => {
         if (!shouldShow()) return;
@@ -269,10 +357,8 @@ function buildAZ() {
             show();
         };
 
-        // 1) Fallback por tiempo (si no hay interacción en DEFER_MS)
         const t = setTimeout(fire, DEFER_MS);
 
-        // 2) O mostrar al primer gesto del usuario (scroll/click/tecla)
         const onInteract = () => fire();
         const cleanup = () => {
             clearTimeout(t);
@@ -288,14 +374,10 @@ function buildAZ() {
         window.addEventListener('touchstart', onInteract, { once: true, capture: true });
     };
 
-    // Esperá a que termine el splash y recién ahí armá el popup
     if (document.getElementById('splash')) {
         window.addEventListener('splash:done', () => armPopup(), { once: true });
-        // Por si el evento no llega, armá igual a los ~3s
         setTimeout(() => armPopup(), 3000);
     } else {
-        // Si no hay splash, arrancá normal con el mismo diferido/gesto
         armPopup();
     }
 })();
-

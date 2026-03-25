@@ -1,22 +1,13 @@
 :root {
     --bg: #F2F1EE;
-    /* gris cálido del fondo del logo */
     --card: #FFFFFF;
-    /* tarjetas blancas */
     --ink: #1F1B18;
-    /* espresso (trazo del logo) */
     --muted: #6B625B;
-    /* texto secundario tibio */
     --accent: #2E7D32;
-    /* verde hoja (CTA, énfasis) */
     --cta: #2E7D32;
-    /* alias explícito para botones */
     --chip: #E5BC48;
-    /* dorado hoja seca para chips */
     --border: #D9D2C7;
-    /* borde arena cálida */
     --sticky: #FFF7E0;
-    /* encabezados pegajosos dorados muy claros */
 }
 
 * {
@@ -58,23 +49,57 @@ body {
     color: #FFFFFF
 }
 
-.app-header h1 {
-    font-size: 1.25rem;
-    margin: 0;
-    color: #FFFFFF
-}
-
-.app-header h1 {
-    font-size: 1.25rem;
-    margin: 0
-}
-
 .btn.ghost {
     background: transparent;
     border: 1px solid #FFFFFF;
     color: #FFFFFF
 }
 
+.quick-strip {
+    padding: .9rem 1.25rem 0;
+}
+
+.quick-filters {
+    display: flex;
+    gap: .6rem;
+    overflow-x: auto;
+    padding: .1rem 0 .2rem;
+    scrollbar-width: none;
+}
+
+.quick-filters::-webkit-scrollbar {
+    display: none;
+}
+
+.quick-filter {
+    flex: 0 0 auto;
+    appearance: none;
+    border: 1px solid var(--border);
+    background: #FFFFFF;
+    color: var(--ink);
+    border-radius: 999px;
+    padding: .62rem .95rem;
+    font: 600 14px/1 Roboto, system-ui, sans-serif;
+    cursor: pointer;
+}
+
+.quick-filter-icon {
+    min-width: 42px;
+    padding: .62rem .75rem;
+    font-size: 1rem;
+}
+
+.quick-filter-icon.has-saved {
+    color: #6E5207;
+    background: #F5D778;
+    border-color: #D0A93E;
+}
+
+.quick-filter.is-active {
+    background: var(--accent);
+    color: #FFFFFF;
+    border-color: #1F5D24;
+}
 
 .controls {
     padding: 1rem 1.25rem;
@@ -152,6 +177,11 @@ body {
     color: var(--ink)
 }
 
+.az-index a.is-disabled {
+    opacity: .28;
+    pointer-events: none
+}
+
 
 .list {
     padding: 0 1rem 2rem 0
@@ -187,13 +217,54 @@ body {
     gap: .5rem;
     color: var(--ink);
     box-shadow: 0 6px 18px rgba(138, 63, 127, .25), inset 0 1px 0 rgba(255, 255, 255, .04), inset 0 -1px 0 rgba(0, 0, 0, .35);
-    position: relative
+    position: relative;
+    transition: transform .14s ease, box-shadow .14s ease, border-color .14s ease
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(138, 63, 127, .20), inset 0 1px 0 rgba(255, 255, 255, .04), inset 0 -1px 0 rgba(0, 0, 0, .28)
+}
+
+.card:active {
+    transform: scale(.985);
+    box-shadow: 0 4px 12px rgba(138, 63, 127, .16), inset 0 1px 0 rgba(255, 255, 255, .04), inset 0 -1px 0 rgba(0, 0, 0, .28)
+}
+
+.card:focus-within {
+    border-color: var(--chip);
+    box-shadow: 0 0 0 3px rgba(229, 188, 72, .18), 0 8px 20px rgba(138, 63, 127, .18), inset 0 1px 0 rgba(255, 255, 255, .04), inset 0 -1px 0 rgba(0, 0, 0, .28)
 }
 
 .card h3 {
     margin: 0;
     font-size: 1rem;
-    color: var(--ink)
+    color: var(--ink);
+    padding-right: 2.4rem
+}
+
+.favorite-toggle {
+    position: absolute;
+    top: .7rem;
+    right: .7rem;
+    width: 34px;
+    height: 34px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: #FFFFFF;
+    color: #9A8A75;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, .08);
+}
+
+.favorite-toggle.is-active {
+    background: var(--chip);
+    color: #6E5207;
+    border-color: #D0A93E;
 }
 
 .meta {
@@ -225,109 +296,29 @@ body {
 .actions {
     display: flex;
     flex-wrap: wrap;
-    gap: .5rem
+    gap: .6rem;
+    align-items: center;
 }
 
-.actions a,
-.actions button {
-    font-size: .9rem;
-    text-decoration: none;
-    border: 1px solid #1F5D24;
-    padding: .5rem .7rem;
-    border-radius: .6rem;
-    background: var(--cta);
-    color: #FFFFFF;
-    transition: transform .08s ease, box-shadow .08s ease
+.actions .btn {
+    flex: 0 0 auto;
+    width: auto !important;
+    white-space: nowrap;
+    min-height: 38px;
+    border-radius: .75rem;
+    max-width: 100%;
 }
 
-.actions a:hover,
-.actions button:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 6px 16px rgba(46, 125, 50, .35)
+@media (min-width: 1024px) {
+    .actions .btn {
+        min-width: 150px;
+        justify-content: center;
+    }
+
+    .actions .btn.outline {
+        min-width: 120px;
+    }
 }
-
-.actions a:active,
-.actions button:active {
-    filter: brightness(.96)
-}
-
-.actions a:focus-visible,
-.actions button:focus-visible {
-    outline: 2px solid #1F5D24;
-    outline-offset: 2px
-}
-
-.actions a:hover,
-.actions button:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 6px 16px rgba(214, 255, 0, .35)
-}
-
-.actions a:active,
-.actions button:active {
-    filter: brightness(.96)
-}
-
-.actions a:focus-visible,
-.actions button:focus-visible {
-    outline: 2px solid #FFFFFF;
-    outline-offset: 2px
-}
-
-.actions a:link,
-.actions a:visited {
-    background: var(--accent);
-    color: #FFFFFF;
-    border-color: var(--border)
-}
-
-.actions a:hover,
-.actions button:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 6px 16px rgba(138, 63, 127, .45)
-}
-
-/* Fijar estilos de enlaces tras volver de apps externas (iOS/Android) */
-.actions a,
-.actions a:link,
-.actions a:visited,
-.actions a:hover,
-.actions a:active,
-.actions a:focus,
-.actions a:focus-visible {
-    background: var(--cta) !important;
-    color: #FFFFFF !important;
-    border-color: #1F5D24 !important;
-    -webkit-text-fill-color: #FFFFFF;
-}
-
-
-
-
-
-
-.actions a:active,
-.actions button:active {
-    filter: brightness(.92)
-}
-
-.actions a:focus-visible,
-.actions button:focus-visible {
-    outline: 2px solid #FFFFFF;
-    outline-offset: 2px
-}
-
-
-.actions a:hover,
-.actions button:hover {
-    background: #F8F5FA;
-    transform: translateY(-1px)
-}
-
-.actions a:hover {
-    background: #f9fafb
-}
-
 
 .stars {
     display: inline-flex;
@@ -344,6 +335,26 @@ body {
     background: linear-gradient(transparent 55%, #E5BC4880 55%)
 }
 
+.empty-state {
+    background: var(--card);
+    border: 1px dashed var(--border);
+    border-radius: 1rem;
+    padding: 1rem 1.1rem;
+    margin: .5rem 0 0;
+    color: var(--muted);
+}
+
+.empty-state h2 {
+    margin: 0;
+    color: var(--ink);
+    font-size: 1rem;
+}
+
+.empty-state p {
+    margin: .45rem 0 0;
+    line-height: 1.45;
+}
+
 
 .app-footer {
     padding: 1rem;
@@ -352,14 +363,13 @@ body {
 }
 
 
-/* Splash overlay */
 #splash {
     position: fixed;
     inset: 0;
     z-index: 9999;
     display: grid;
     place-items: center;
-    background: var(--bg);
+    background: #F2F1EE;
     transition: opacity .45s ease
 }
 
@@ -420,75 +430,10 @@ body {
 
 .pop-actions {
     display: flex;
-    gap: .5rem;
+    gap: .6rem;
     justify-content: center;
     flex-wrap: wrap;
     margin-top: .75rem
-}
-
-.pop-btn {
-    appearance: none;
-    border: 1px solid var(--border);
-    background: var(--cta, var(--accent));
-    color: #fff;
-    padding: .55rem .9rem;
-    border-radius: .6rem;
-    text-decoration: none;
-    cursor: pointer
-}
-
-.pop-btn:hover {
-    filter: brightness(.98)
-}
-
-.pop-btn.outline {
-    background: transparent;
-    color: var(--ink);
-    border-color: var(--border)
-}
-
-#splash {
-    z-index: 9999;
-}
-
-.pop {
-    z-index: 9000;
-}
-
-#splash {
-    opacity: 1;
-    transition: opacity .45s ease;
-}
-
-#splash.is-hidden {
-    opacity: 0;
-    pointer-events: none;
-}
-
-:root {
-    /* paleta del tema */
-    --cta-success: #6ACFC7;
-    /* verde azulado claro */
-    --cta-success-ink: #0C1A1A;
-    /* verde cardenal (texto/foco) */
-}
-
-/* Botón verde del popup */
-.pop-btn.success {
-    background: var(--cta-success);
-    color: var(--cta-success-ink);
-    border: 1px solid rgba(12, 26, 26, .35);
-    font-weight: 600;
-}
-
-.pop-btn.success:hover {
-    filter: brightness(.98);
-    transform: translateY(-1px);
-}
-
-.pop-btn.success:focus-visible {
-    outline: 2px solid var(--cta-success);
-    outline-offset: 2px;
 }
 
 .btn {
@@ -497,9 +442,9 @@ body {
     align-items: center;
     justify-content: center;
     gap: .45rem;
-    background: var(--btn-bg);
-    color: var(--btn-ink);
-    border: 1px solid var(--btn-border);
+    background: var(--cta);
+    color: #FFFFFF;
+    border: 1px solid #1F5D24;
     border-radius: .65rem;
     padding: .55rem .9rem;
     font: 500 14px/1.1 system-ui, -apple-system, Roboto, "Segoe UI", Arial, sans-serif;
@@ -522,107 +467,12 @@ body {
 }
 
 .btn:focus-visible {
-    outline: 2px solid var(--btn-bg);
+    outline: 2px solid var(--cta);
     outline-offset: 2px;
 }
 
 .btn.outline {
     background: transparent;
-    color: var(--btn-bg);
-    border-color: var(--btn-bg);
-}
-
-/* separaciones en tarjetas y popup */
-.actions .btn {
-    margin-right: .4rem;
-}
-
-.actions .btn:last-child {
-    margin-right: 0;
-}
-
-.pop-actions .btn {
-    min-width: 120px;
-}
-
-/* ===== Fix: botones no se deforman en pantallas grandes ===== */
-.actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: .6rem;
-    align-items: center;
-}
-
-.actions .btn {
-    flex: 0 0 auto;
-    /* no crecer ni encogerse */
-    width: auto !important;
-    /* pisa cualquier width:100% heredado */
-    white-space: nowrap;
-    /* evita salto de línea dentro del botón */
-    min-height: 38px;
-    /* altura consistente */
-    border-radius: .75rem;
-    /* pill prolijo */
-    max-width: 100%;
-}
-
-/* Opcional: darle un ancho mínimo prolijo en desktop */
-@media (min-width: 1024px) {
-    .actions .btn {
-        min-width: 150px;
-        justify-content: center;
-    }
-
-    .actions .btn.outline {
-        min-width: 120px;
-    }
-}
-
-/* Popup (por si también estiraba) */
-.pop-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: .6rem;
-    justify-content: center;
-}
-
-.pop-actions .btn {
-    flex: 0 0 auto;
-    min-width: 140px;
-    width: auto !important;
-    white-space: nowrap;
-}
-
-/* ==== Fix chip de Servicio (no stretch, 1 línea, theme) ==== */
-.meta {
-    display: flex;
-    align-items: center;
-    gap: .5rem;
-    flex-wrap: wrap;
-}
-
-.meta .chip {
-    display: inline-flex;
-    align-items: center;
-    flex: 0 0 auto;
-    /* no crecer */
-    padding: .28rem .70rem;
-    border-radius: 9999px;
-    /* pill */
-    white-space: nowrap;
-    /* evita salto */
-    max-width: 100%;
-    box-sizing: border-box;
-}
-
-.meta .stars {
-    margin-left: auto;
-}
-
-@media (min-width:1024px) {
-    .meta .chip {
-        font-size: .84rem;
-        padding: .30rem .80rem;
-    }
+    color: var(--cta);
+    border-color: var(--cta);
 }
