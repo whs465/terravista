@@ -6,6 +6,7 @@ window.safeShow = window.safeShow || function () {
 };
 
 const DATA_URL = new URL('./contacts.json', window.location.href).toString();
+const APP_SHARE_URL = 'https://terravista166.vercel.app/';
 
 const el = {
     search: document.getElementById('search'),
@@ -161,9 +162,16 @@ function cardHTML(c, q) {
     const isFavorite = favorites.includes(id);
     return `
 <article class="card">
-  <button class="favorite-toggle ${isFavorite ? 'is-active' : ''}" type="button" data-favorite-toggle="${id}" aria-label="${isFavorite ? 'Quitar de favoritos' : 'Guardar en favoritos'}" aria-pressed="${isFavorite}">
-    <span aria-hidden="true">${isFavorite ? '★' : '☆'}</span>
-  </button>
+  <div class="card-tools">
+    <button class="share-toggle" type="button" data-share-contact="${id}" aria-label="Compartir contacto">
+      <svg class="share-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M15 5l-1.41 1.41 2.58 2.59H8a4 4 0 000 8h1v-2H8a2 2 0 010-4h8.17l-2.58 2.59L15 15l5-5-5-5z"></path>
+      </svg>
+    </button>
+    <button class="favorite-toggle ${isFavorite ? 'is-active' : ''}" type="button" data-favorite-toggle="${id}" aria-label="${isFavorite ? 'Quitar de favoritos' : 'Guardar en favoritos'}" aria-pressed="${isFavorite}">
+      <span aria-hidden="true">${isFavorite ? '★' : '☆'}</span>
+    </button>
+  </div>
   <h3>${highlight(c.name || '', q)}</h3>
   <div class="meta">
     <span class="chip">${escapeHTML(c.service || 'Servicio')}</span>
@@ -171,6 +179,7 @@ function cardHTML(c, q) {
   </div>
   ${c.description ? `<p class="desc">${highlight(c.description, q)}</p>` : ''}
   ${c.address ? `<p class="addr">📍 ${highlight(c.address, q)}</p>` : ''}
+  <p class="share-feedback" data-share-feedback="${id}" aria-live="polite"></p>
   <div class="actions">
     ${telLink(c.phone1)}
     ${telLink(c.phone2)}
@@ -238,9 +247,16 @@ function onQuickFilterClick(event) {
 
 function onDocumentClick(event) {
     const favoriteButton = event.target.closest('[data-favorite-toggle]');
-    if (!favoriteButton) return;
-    const activated = toggleFavorite(favoriteButton.dataset.favoriteToggle || '');
-    if (activated) pulseFavoriteButtons(favoriteButton.dataset.favoriteToggle || '');
+    if (favoriteButton) {
+        const activated = toggleFavorite(favoriteButton.dataset.favoriteToggle || '');
+        if (activated) pulseFavoriteButtons(favoriteButton.dataset.favoriteToggle || '');
+        return;
+    }
+
+    const shareButton = event.target.closest('[data-share-contact]');
+    if (shareButton) {
+        shareContact(shareButton.dataset.shareContact || '');
+    }
 }
 
 function toggleFavorite(id) {
@@ -275,6 +291,61 @@ function saveFavorites() {
     try {
         localStorage.setItem('terravista:favorites', JSON.stringify(favorites));
     } catch { }
+}
+
+async function shareContact(id) {
+    const contact = raw.find(item => contactId(item) === id);
+    if (!contact) return;
+
+    const shareText = buildShareText(contact);
+    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
+
+    try {
+        window.open(whatsappUrl, '_blank', 'noopener');
+        showShareFeedback(id, 'Abriendo WhatsApp');
+        return;
+    } catch { }
+
+    try {
+        if (navigator.clipboard?.writeText) {
+            await navigator.clipboard.writeText(shareText);
+            showShareFeedback(id, 'Copiado');
+            return;
+        }
+    } catch { }
+
+    showShareFeedback(id, 'No se pudo compartir');
+}
+
+function buildShareText(contact) {
+    const lines = [
+        'Les comparto este contacto del Directorio Terravista:',
+        '',
+        `${contact.service || 'Servicio'} - ${contact.name || 'Contacto'}`,
+    ];
+
+    if (contact.whatsapp) lines.push(`WhatsApp: ${contact.whatsapp}`);
+    if (contact.phone1) lines.push(`Tel: ${contact.phone1}`);
+    if (contact.phone2) lines.push(`Tel alterno: ${contact.phone2}`);
+    if (contact.email) lines.push(`Email: ${contact.email}`);
+    if (contact.website) lines.push(`Web: ${contact.website}`);
+    if (contact.description) lines.push(`Detalle: ${contact.description}`);
+    lines.push('');
+    lines.push(`Directorio: ${APP_SHARE_URL}`);
+
+    return lines.join('\n');
+}
+
+function showShareFeedback(id, message) {
+    const node = document.querySelector(`[data-share-feedback="${CSS.escape(id)}"]`);
+    if (!node) return;
+    node.textContent = message;
+    node.classList.add('is-visible');
+    window.clearTimeout(node._shareTimer);
+    node._shareTimer = window.setTimeout(() => {
+        node.textContent = '';
+        node.classList.remove('is-visible');
+    }, 1800);
 }
 
 function animateListRefresh() {
