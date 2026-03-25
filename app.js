@@ -237,6 +237,8 @@ function onQuickFilterClick(event) {
 function onDocumentClick(event) {
     const favoriteButton = event.target.closest('[data-favorite-toggle]');
     if (favoriteButton) {
+        event.preventDefault();
+        event.stopPropagation();
         const activated = toggleFavorite(favoriteButton.dataset.favoriteToggle || '');
         if (activated) pulseFavoriteButtons(favoriteButton.dataset.favoriteToggle || '');
         return;
@@ -244,6 +246,8 @@ function onDocumentClick(event) {
 
     const shareButton = event.target.closest('[data-share-contact]');
     if (shareButton) {
+        event.preventDefault();
+        event.stopPropagation();
         shareContact(shareButton.dataset.shareContact || '');
     }
 }
