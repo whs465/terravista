@@ -8,7 +8,7 @@ window.safeShow = window.safeShow || function () {
 const DATA_URL = new URL('./contacts.json', window.location.href).toString();
 const TIPS_URL = new URL('./tips.json', window.location.href).toString();
 const APP_SHARE_URL = 'https://terravista166.vercel.app/';
-const TIP_ROTATION_MS = 9000;
+const LAST_TIP_STORAGE_KEY = 'terravista:lastTipIndex';
 
 const el = {
     search: document.getElementById('search'),
@@ -27,9 +27,8 @@ let activeFilter = 'all';
 let favorites = loadFavorites();
 let activeLetters = [];
 let listAnimationTimer = null;
-let tipTimer = null;
 let tips = ['Cuidemos entre todos los espacios que compartimos.'];
-let tipIndex = randomTipIndex();
+let tipIndex = pickNextTipIndex();
 
 window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
@@ -45,15 +44,15 @@ el.installBtn?.addEventListener('click', async () => {
     el.installBtn.hidden = true;
 });
 
-setupTipTicker();
+renderTip();
 
 fetch(TIPS_URL)
     .then(r => r.json())
     .then(json => {
         if (Array.isArray(json) && json.length) {
             tips = json.map(item => (item || '').toString().trim()).filter(Boolean);
-            tipIndex = randomTipIndex();
-            setupTipTicker();
+            tipIndex = pickNextTipIndex();
+            renderTip();
         }
     })
     .catch(() => { });
@@ -442,37 +441,47 @@ function animateListRefresh() {
     }, 240);
 }
 
-function setupTipTicker() {
+function renderTip() {
     if (!el.tipTicker || !el.tipTickerText || !tips.length) return;
-
-    window.clearInterval(tipTimer);
-
-    const renderTip = () => {
-        el.tipTickerText.classList.remove('is-visible');
-        window.setTimeout(() => {
-            el.tipTickerText.textContent = tips[tipIndex];
-            el.tipTickerText.classList.add('is-visible');
-        }, 90);
-    };
-
-    const nextTip = () => {
-        tipIndex = (tipIndex + 1) % tips.length;
-        renderTip();
-    };
-
-    renderTip();
-    tipTimer = window.setInterval(nextTip, TIP_ROTATION_MS);
-
-    el.tipTicker.onclick = () => {
-        window.clearInterval(tipTimer);
-        nextTip();
-        tipTimer = window.setInterval(nextTip, TIP_ROTATION_MS);
-    };
+    el.tipTickerText.classList.remove('is-visible');
+    window.setTimeout(() => {
+        el.tipTickerText.textContent = tips[tipIndex];
+        el.tipTickerText.classList.add('is-visible');
+    }, 90);
 }
 
-function randomTipIndex() {
+function pickNextTipIndex() {
     if (!tips.length) return 0;
-    return Math.floor(Math.random() * tips.length);
+    if (tips.length === 1) {
+        persistLastTipIndex(0);
+        return 0;
+    }
+
+    const lastTipIndex = loadLastTipIndex();
+    let nextIndex = Math.floor(Math.random() * tips.length);
+    if (Number.isInteger(lastTipIndex) && tips.length > 1) {
+        while (nextIndex === lastTipIndex) {
+            nextIndex = Math.floor(Math.random() * tips.length);
+        }
+    }
+
+    persistLastTipIndex(nextIndex);
+    return nextIndex;
+}
+
+function loadLastTipIndex() {
+    try {
+        const stored = Number(localStorage.getItem(LAST_TIP_STORAGE_KEY));
+        return Number.isInteger(stored) ? stored : null;
+    } catch {
+        return null;
+    }
+}
+
+function persistLastTipIndex(index) {
+    try {
+        localStorage.setItem(LAST_TIP_STORAGE_KEY, String(index));
+    } catch { }
 }
 
 function pulseFavoriteButtons(id) {
