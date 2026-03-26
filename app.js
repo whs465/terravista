@@ -32,6 +32,10 @@ let tips = ['Cuidemos entre todos los espacios que compartimos.'];
 let tipIndex = pickNextTipIndex();
 
 syncInstallButtonVisibility();
+window.addEventListener('pageshow', syncInstallButtonVisibility);
+document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') syncInstallButtonVisibility();
+});
 
 window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
@@ -51,7 +55,15 @@ window.addEventListener('appinstalled', () => {
 });
 
 el.installBtn?.addEventListener('click', async () => {
-    if (!deferredPrompt) return;
+    if (isInstallButtonSuppressed()) {
+        deferredPrompt = null;
+        syncInstallButtonVisibility();
+        return;
+    }
+    if (!deferredPrompt) {
+        syncInstallButtonVisibility();
+        return;
+    }
     deferredPrompt.prompt();
     const choice = await deferredPrompt.userChoice;
     if (choice?.outcome === 'accepted') {
