@@ -91,7 +91,8 @@ fetch(DATA_URL)
         render();
     });
 
-['search', 'sortBy'].forEach(key => el[key].addEventListener('input', render));
+el.search?.addEventListener('input', onSearchInput);
+el.sortBy?.addEventListener('input', render);
 el.quickFilters?.addEventListener('click', onQuickFilterClick);
 document.addEventListener('click', onDocumentClick);
 
@@ -264,6 +265,14 @@ function onQuickFilterClick(event) {
     if (!button) return;
     activeFilter = button.dataset.filter || 'all';
     renderQuickFilters();
+    render();
+}
+
+function onSearchInput() {
+    if (activeFilter !== 'all') {
+        activeFilter = 'all';
+        renderQuickFilters();
+    }
     render();
 }
 
