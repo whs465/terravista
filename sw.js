@@ -69,18 +69,19 @@ self.addEventListener('fetch', (event) => {
         return;
     }
 
-    // Estáticos propios
+    // Estáticos propios: red primero para que CSS/JS/imagenes se actualicen
+    // automaticamente despues de cada deploy, con fallback offline a cache.
     if (url.origin === self.location.origin && /\.(css|js|png|jpg|jpeg|svg|webp|ico|woff2?)$/i.test(url.pathname)) {
         event.respondWith((async () => {
-            const hit = await caches.match(req, { ignoreSearch: true });
-            if (hit) { log('fetch:static:cache', url.pathname); return hit; }
             try {
                 const res = await fetch(req);
                 (await caches.open(CACHE)).put(req, res.clone());
                 log('fetch:static:net->cache', url.pathname);
                 return res;
             } catch (err) {
-                log('fetch:static:ERROR', url.pathname, String(err));
+                const fb = await caches.match(req, { ignoreSearch: true });
+                if (fb) { log('fetch:static:FALLBACK cache', url.pathname); return fb; }
+                log('fetch:static:MISS', url.pathname, String(err));
                 return (await caches.match(new URL('index.html', BASE).toString())) || Response.error();
             }
         })());
