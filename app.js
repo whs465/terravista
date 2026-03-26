@@ -9,6 +9,7 @@ const DATA_URL = new URL('./contacts.json', window.location.href).toString();
 const TIPS_URL = new URL('./tips.json', window.location.href).toString();
 const APP_SHARE_URL = 'https://terravista166.vercel.app/';
 const LAST_TIP_STORAGE_KEY = 'terravista:lastTipIndex';
+const APP_INSTALLED_STORAGE_KEY = 'terravista:appInstalled';
 
 const el = {
     search: document.getElementById('search'),
@@ -34,19 +35,28 @@ syncInstallButtonVisibility();
 
 window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
+    if (isInstallButtonSuppressed()) {
+        deferredPrompt = null;
+        syncInstallButtonVisibility();
+        return;
+    }
     deferredPrompt = e;
     syncInstallButtonVisibility();
 });
 
 window.addEventListener('appinstalled', () => {
     deferredPrompt = null;
+    persistInstalledState(true);
     syncInstallButtonVisibility();
 });
 
 el.installBtn?.addEventListener('click', async () => {
     if (!deferredPrompt) return;
     deferredPrompt.prompt();
-    await deferredPrompt.userChoice;
+    const choice = await deferredPrompt.userChoice;
+    if (choice?.outcome === 'accepted') {
+        persistInstalledState(true);
+    }
     deferredPrompt = null;
     syncInstallButtonVisibility();
 });
@@ -493,8 +503,34 @@ function persistLastTipIndex(index) {
 
 function syncInstallButtonVisibility() {
     if (!el.installBtn) return;
-    const isStandalone = window.matchMedia?.('(display-mode: standalone)').matches || window.navigator.standalone === true;
-    el.installBtn.hidden = isStandalone || !deferredPrompt;
+    el.installBtn.hidden = isInstallButtonSuppressed() || !deferredPrompt;
+}
+
+function isInstallButtonSuppressed() {
+    return isRunningAsInstalledApp() || loadInstalledState();
+}
+
+function isRunningAsInstalledApp() {
+    return window.matchMedia?.('(display-mode: standalone)').matches ||
+        window.matchMedia?.('(display-mode: fullscreen)').matches ||
+        window.matchMedia?.('(display-mode: minimal-ui)').matches ||
+        window.navigator.standalone === true ||
+        document.referrer.startsWith('android-app://');
+}
+
+function loadInstalledState() {
+    try {
+        return localStorage.getItem(APP_INSTALLED_STORAGE_KEY) === 'true';
+    } catch {
+        return false;
+    }
+}
+
+function persistInstalledState(installed) {
+    try {
+        if (installed) localStorage.setItem(APP_INSTALLED_STORAGE_KEY, 'true');
+        else localStorage.removeItem(APP_INSTALLED_STORAGE_KEY);
+    } catch { }
 }
 
 function pulseFavoriteButtons(id) {
