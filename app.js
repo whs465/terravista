@@ -30,10 +30,17 @@ let listAnimationTimer = null;
 let tips = ['Cuidemos entre todos los espacios que compartimos.'];
 let tipIndex = pickNextTipIndex();
 
+syncInstallButtonVisibility();
+
 window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
-    el.installBtn.hidden = false;
+    syncInstallButtonVisibility();
+});
+
+window.addEventListener('appinstalled', () => {
+    deferredPrompt = null;
+    syncInstallButtonVisibility();
 });
 
 el.installBtn?.addEventListener('click', async () => {
@@ -41,7 +48,7 @@ el.installBtn?.addEventListener('click', async () => {
     deferredPrompt.prompt();
     await deferredPrompt.userChoice;
     deferredPrompt = null;
-    el.installBtn.hidden = true;
+    syncInstallButtonVisibility();
 });
 
 renderTip();
@@ -482,6 +489,12 @@ function persistLastTipIndex(index) {
     try {
         localStorage.setItem(LAST_TIP_STORAGE_KEY, String(index));
     } catch { }
+}
+
+function syncInstallButtonVisibility() {
+    if (!el.installBtn) return;
+    const isStandalone = window.matchMedia?.('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    el.installBtn.hidden = isStandalone || !deferredPrompt;
 }
 
 function pulseFavoriteButtons(id) {
