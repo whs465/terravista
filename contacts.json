@@ -267,19 +267,10 @@
     "stars": 5
   },
   {
-    "service": "Paseo Perros",
-    "name": "La Perrera VIP",
-    "description": "Petshop / Paseos / Cuidado en casa🐾🐶🐱",
-    "address": "",
-    "phone1": "+57 3132909016",
-    "phone2": "",
-    "whatsapp": "+57 3132909016",
-    "website": "",
-    "email": "laperreravip@hotmail.com",
-    "stars": 5
-  },
-  {
-    "service": "Paseo Perros",
+    "service": [
+      "Paseo Perros",
+      "Petshop"
+    ],
     "name": "La Perrera VIP",
     "description": "Petshop / Paseos / Cuidado en casa🐾🐶🐱",
     "address": "",
@@ -555,7 +546,10 @@
     "stars": 5
   },
   {
-    "service": "Odontologia",
+    "service": [
+      "Odontologia",
+      "Ortodoncia"
+    ],
     "name": "Katerine bermeo Vargas",
     "description": "Odontología Especializada en Ortodoncia",
     "address": "",
@@ -567,7 +561,10 @@
     "stars": 5
   },
   {
-    "service": "Odontologia",
+    "service": [
+      "Odontologia",
+      "Odontopediatria"
+    ],
     "name": "Dr. Mario Romero",
     "description": "Odontopediatria",
     "address": "",
@@ -579,7 +576,10 @@
     "stars": 5
   },
   {
-    "service": "Odontologia",
+      "service": [
+      "Odontologia",
+      "Odontopediatria"
+    ],
     "name": "Diana Roa",
     "description": "Odontopediatria 🦷",
     "address": "",
@@ -591,7 +591,10 @@
     "stars": 5
   },
   {
-    "service": "Odontologia",
+      "service": [
+      "Odontologia",
+      "Odontopediatria"
+    ],
     "name": "Carolina Ruiz",
     "description": "Odontopediatria 🦷",
     "address": "",

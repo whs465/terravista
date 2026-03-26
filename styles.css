@@ -90,6 +90,74 @@ body::after {
     color: #FFFFFF
 }
 
+.tips-strip {
+    padding: .65rem 1.25rem 0;
+}
+
+.tip-ticker {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: .7rem;
+    padding: .25rem 0 .15rem;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: var(--ink);
+    text-align: left;
+    cursor: pointer;
+    box-shadow: none;
+}
+
+.tip-badge {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 24px;
+    padding: 0 .55rem;
+    border-radius: 999px;
+    background: rgba(46, 125, 50, .08);
+    color: var(--accent);
+    font: 700 11px/1 Roboto, system-ui, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+}
+
+.tip-badge-image {
+    width: 54px;
+    min-width: 54px;
+    min-height: 54px;
+    padding: 0;
+    border-radius: 16px;
+    overflow: hidden;
+    background: transparent;
+}
+
+.tip-badge-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.tip-text {
+    display: block;
+    flex: 1 1 auto;
+    min-width: 0;
+    color: var(--muted);
+    font-size: .89rem;
+    line-height: 1.35;
+    opacity: 0;
+    transform: translateY(2px);
+    transition: opacity .22s ease, transform .22s ease;
+}
+
+.tip-text.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
 .quick-strip {
     padding: .9rem 1.25rem 0;
 }

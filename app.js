@@ -6,7 +6,9 @@ window.safeShow = window.safeShow || function () {
 };
 
 const DATA_URL = new URL('./contacts.json', window.location.href).toString();
+const TIPS_URL = new URL('./tips.json', window.location.href).toString();
 const APP_SHARE_URL = 'https://terravista166.vercel.app/';
+const TIP_ROTATION_MS = 9000;
 
 const el = {
     search: document.getElementById('search'),
@@ -15,6 +17,8 @@ const el = {
     azIndex: document.getElementById('azIndex'),
     installBtn: document.getElementById('installBtn'),
     quickFilters: document.getElementById('quickFilters'),
+    tipTicker: document.getElementById('tipTicker'),
+    tipTickerText: document.getElementById('tipTickerText'),
 };
 
 let raw = [];
@@ -23,6 +27,9 @@ let activeFilter = 'all';
 let favorites = loadFavorites();
 let activeLetters = [];
 let listAnimationTimer = null;
+let tipIndex = 0;
+let tipTimer = null;
+let tips = ['Cuidemos entre todos los espacios que compartimos.'];
 
 window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
@@ -37,6 +44,19 @@ el.installBtn?.addEventListener('click', async () => {
     deferredPrompt = null;
     el.installBtn.hidden = true;
 });
+
+setupTipTicker();
+
+fetch(TIPS_URL)
+    .then(r => r.json())
+    .then(json => {
+        if (Array.isArray(json) && json.length) {
+            tips = json.map(item => (item || '').toString().trim()).filter(Boolean);
+            tipIndex = 0;
+            setupTipTicker();
+        }
+    })
+    .catch(() => { });
 
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.addEventListener('message', (e) => {
@@ -408,6 +428,34 @@ function animateListRefresh() {
     listAnimationTimer = window.setTimeout(() => {
         el.list.classList.remove('is-refreshing');
     }, 240);
+}
+
+function setupTipTicker() {
+    if (!el.tipTicker || !el.tipTickerText || !tips.length) return;
+
+    window.clearInterval(tipTimer);
+
+    const renderTip = () => {
+        el.tipTickerText.classList.remove('is-visible');
+        window.setTimeout(() => {
+            el.tipTickerText.textContent = tips[tipIndex];
+            el.tipTickerText.classList.add('is-visible');
+        }, 90);
+    };
+
+    const nextTip = () => {
+        tipIndex = (tipIndex + 1) % tips.length;
+        renderTip();
+    };
+
+    renderTip();
+    tipTimer = window.setInterval(nextTip, TIP_ROTATION_MS);
+
+    el.tipTicker.onclick = () => {
+        window.clearInterval(tipTimer);
+        nextTip();
+        tipTimer = window.setInterval(nextTip, TIP_ROTATION_MS);
+    };
 }
 
 function pulseFavoriteButtons(id) {
