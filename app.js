@@ -27,7 +27,7 @@ let activeFilter = 'all';
 let favorites = loadFavorites();
 let activeLetters = [];
 let listAnimationTimer = null;
-let tipIndex = 0;
+let tipIndex = randomTipIndex();
 let tipTimer = null;
 let tips = ['Cuidemos entre todos los espacios que compartimos.'];
 
@@ -52,7 +52,7 @@ fetch(TIPS_URL)
     .then(json => {
         if (Array.isArray(json) && json.length) {
             tips = json.map(item => (item || '').toString().trim()).filter(Boolean);
-            tipIndex = 0;
+            tipIndex = randomTipIndex();
             setupTipTicker();
         }
     })
@@ -456,6 +456,11 @@ function setupTipTicker() {
         nextTip();
         tipTimer = window.setInterval(nextTip, TIP_ROTATION_MS);
     };
+}
+
+function randomTipIndex() {
+    if (!tips.length) return 0;
+    return Math.floor(Math.random() * tips.length);
 }
 
 function pulseFavoriteButtons(id) {
