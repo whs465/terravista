@@ -27,9 +27,9 @@ let activeFilter = 'all';
 let favorites = loadFavorites();
 let activeLetters = [];
 let listAnimationTimer = null;
-let tipIndex = randomTipIndex();
 let tipTimer = null;
 let tips = ['Cuidemos entre todos los espacios que compartimos.'];
+let tipIndex = randomTipIndex();
 
 window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
