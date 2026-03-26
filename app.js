@@ -208,6 +208,44 @@ function waLink(num) {
     return `<a class="btn btn-primary" href="https://wa.me/${digits}" target="_blank" rel="noopener">WhatsApp</a>`;
 }
 
+function mapButtonHTML(contact) {
+    const coords = getCoordinates(contact);
+    if (!coords) return '';
+    const webHref = mapWebLink(contact, coords);
+    const geoHref = mapGeoLink(contact, coords);
+    return `<a class="btn outline" href="${escapeHTML(webHref)}" target="_blank" rel="noopener" data-map-web="${escapeHTML(webHref)}" data-map-geo="${escapeHTML(geoHref)}">Mapa</a>`;
+}
+
+function mapWebLink(contact, coords = getCoordinates(contact)) {
+    if (!coords) return '';
+    const { lat, lng } = coords;
+    return `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}#map=18/${lat}/${lng}`;
+}
+
+function mapGeoLink(contact, coords = getCoordinates(contact)) {
+    if (!coords) return '';
+    const { lat, lng } = coords;
+    const label = encodeURIComponent((contact.name || contact.address || 'Ubicacion').trim());
+    return `geo:${lat},${lng}?q=${lat},${lng}(${label})`;
+}
+
+function getCoordinates(contact) {
+    const lat = normalizeCoordinate(contact.lat);
+    const lng = normalizeCoordinate(contact.lng);
+    if (lat == null || lng == null) return null;
+    if (lat < -90 || lat > 90 || lng < -180 || lng > 180) return null;
+    return { lat, lng };
+}
+
+function normalizeCoordinate(value) {
+    if (value === '' || value == null) return null;
+    const normalized = Number(String(value).replace(',', '.').trim());
+    return Number.isFinite(normalized) ? normalized : null;
+}
+
+function isMobileDevice() {
+    return /android|iphone|ipad|ipod|mobile/i.test(navigator.userAgent || '');
+}
 
 function cardHTML(c, q) {
     const id = contactId(c);
@@ -235,6 +273,7 @@ function cardHTML(c, q) {
     ${telLink(c.phone1)}
     ${telLink(c.phone2)}
     ${waLink(c.whatsapp)}
+    ${mapButtonHTML(c)}
     ${c.email ? `<a class="btn outline" href="mailto:${escapeHTML(c.email)}">Email</a>` : ''}
     ${c.website ? `<a class="btn outline" href="${escapeHTML(c.website)}" target="_blank" rel="noopener">Web</a>` : ''}
   </div>
@@ -319,7 +358,43 @@ function onDocumentClick(event) {
         event.preventDefault();
         event.stopPropagation();
         shareContact(shareButton.dataset.shareContact || '');
+        return;
     }
+
+    const mapLink = event.target.closest('[data-map-web]');
+    if (mapLink) {
+        handleMapClick(event, mapLink);
+    }
+}
+
+function handleMapClick(event, link) {
+    const webHref = link.dataset.mapWeb || link.href;
+    const geoHref = link.dataset.mapGeo || '';
+    if (!geoHref || !isMobileDevice()) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    let navigated = false;
+    const fallbackTimer = window.setTimeout(() => {
+        if (navigated) return;
+        window.open(webHref, '_blank', 'noopener');
+    }, 700);
+
+    const cancelFallback = () => {
+        navigated = true;
+        window.clearTimeout(fallbackTimer);
+        window.removeEventListener('pagehide', cancelFallback);
+        document.removeEventListener('visibilitychange', onVisibilityChange);
+    };
+
+    const onVisibilityChange = () => {
+        if (document.visibilityState === 'hidden') cancelFallback();
+    };
+
+    window.addEventListener('pagehide', cancelFallback, { once: true });
+    document.addEventListener('visibilitychange', onVisibilityChange);
+    window.location.href = geoHref;
 }
 
 function toggleFavorite(id) {
@@ -379,6 +454,8 @@ function mergeContacts(items) {
         existing.whatsapp = existing.whatsapp || item.whatsapp;
         existing.website = existing.website || item.website;
         existing.email = existing.email || item.email;
+        existing.lat = existing.lat ?? item.lat;
+        existing.lng = existing.lng ?? item.lng;
     }
 
     return Array.from(map.values());

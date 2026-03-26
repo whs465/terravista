@@ -442,6 +442,8 @@
     "name": "Portería",
     "description": "Recepción 24/7",
     "address": "Cra 8f # 166-34",
+    "lat": 4.743993,
+    "lng": -74.028411,
     "phone1": "+57 3229060688",
     "phone2": "",
     "whatsapp": "",
@@ -576,7 +578,7 @@
     "stars": 5
   },
   {
-      "service": [
+    "service": [
       "Odontologia",
       "Odontopediatria"
     ],
@@ -591,7 +593,7 @@
     "stars": 5
   },
   {
-      "service": [
+    "service": [
       "Odontologia",
       "Odontopediatria"
     ],
