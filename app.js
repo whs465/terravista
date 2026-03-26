@@ -63,7 +63,7 @@ if ('serviceWorker' in navigator) {
 
 fetch(DATA_URL)
     .then(r => r.json())
-    .then(json => { raw = json; renderQuickFilters(); render(); buildAZ(); })
+    .then(json => { raw = mergeContacts(json); renderQuickFilters(); render(); buildAZ(); })
     .catch(err => {
         console.error('No se pudo cargar contacts.json', err);
         raw = [];
@@ -77,9 +77,22 @@ document.addEventListener('click', onDocumentClick);
 
 function normalize(s) { return (s || '').toString().toLowerCase(); }
 
+function normalizeServices(service) {
+    if (Array.isArray(service)) return service.map(item => (item || '').toString().trim()).filter(Boolean);
+    return (service || '')
+        .toString()
+        .split(',')
+        .map(item => item.trim())
+        .filter(Boolean);
+}
+
+function primaryService(contact) {
+    return normalize(contact.services?.[0] || contact.service || '');
+}
+
 function matchesQuery(c, q) {
     if (!q) return true;
-    const blob = [c.service, c.name, c.description, c.address, c.phone1, c.phone2, c.whatsapp, c.website, c.email]
+    const blob = [c.services?.join(' '), c.name, c.description, c.address, c.phone1, c.phone2, c.whatsapp, c.website, c.email]
         .map(normalize).join(' ');
     return blob.includes(q);
 }
@@ -94,12 +107,12 @@ function render() {
         .filter(c => matchesQuery(c, q))
         .filter(c => matchesActiveFilter(c))
         .slice()
-        .sort((a, b) => normalize(a[sortBy]).localeCompare(normalize(b[sortBy])) ||
+        .sort((a, b) => getSortValue(a, sortBy).localeCompare(getSortValue(b, sortBy)) ||
             normalize(a.name).localeCompare(normalize(b.name)));
 
     const groups = {};
     for (const c of data) {
-        const key = (normalize(c[sortBy])[0] || '#').toUpperCase();
+        const key = (getSortValue(c, sortBy)[0] || '#').toUpperCase();
         (groups[key] ||= []).push(c);
     }
 
@@ -164,7 +177,7 @@ function cardHTML(c, q) {
   </div>
   <h3>${highlight(c.name || '', q)}</h3>
   <div class="meta">
-    <span class="chip">${escapeHTML(c.service || 'Servicio')}</span>
+    ${serviceChipsHTML(c.services || [])}
   </div>
   ${c.description ? `<p class="desc">${highlight(c.description, q)}</p>` : ''}
   ${c.address ? `<p class="addr">📍 ${highlight(c.address, q)}</p>` : ''}
@@ -204,7 +217,7 @@ function emptyStateHTML() {
 
 function renderQuickFilters() {
     if (!el.quickFilters) return;
-    const services = Array.from(new Set(raw.map(c => (c.service || '').trim()).filter(Boolean)))
+    const services = Array.from(new Set(raw.flatMap(c => c.services || [])))
         .sort((a, b) => a.localeCompare(b, 'es'));
     const favoriteCount = favorites.length;
     const buttons = [
@@ -222,7 +235,7 @@ function renderQuickFilters() {
 function matchesActiveFilter(contact) {
     if (activeFilter === 'all') return true;
     if (activeFilter === 'favorites') return favorites.includes(contactId(contact));
-    if (activeFilter.startsWith('service:')) return (contact.service || '') === activeFilter.slice(8);
+    if (activeFilter.startsWith('service:')) return (contact.services || []).includes(activeFilter.slice(8));
     return true;
 }
 
@@ -265,10 +278,54 @@ function toggleFavorite(id) {
 }
 
 function contactId(contact) {
-    return [contact.service, contact.name, contact.phone1 || contact.whatsapp || contact.email || '']
+    return [contact.name, contact.phone1 || contact.whatsapp || contact.email || contact.website || '']
         .map(normalize)
         .filter(Boolean)
         .join('::');
+}
+
+function getSortValue(contact, sortBy) {
+    if (sortBy === 'service') return primaryService(contact);
+    return normalize(contact[sortBy]);
+}
+
+function serviceChipsHTML(services) {
+    return services.map(service => `<span class="chip">${escapeHTML(service)}</span>`).join('');
+}
+
+function mergeContacts(items) {
+    const map = new Map();
+
+    for (const item of Array.isArray(items) ? items : []) {
+        const services = normalizeServices(item.services || item.service);
+        const key = contactId({ ...item, service: '', services: [] });
+        const existing = map.get(key);
+
+        if (!existing) {
+            map.set(key, {
+                ...item,
+                service: services[0] || normalizeServices(item.service)[0] || '',
+                services,
+            });
+            continue;
+        }
+
+        existing.services = Array.from(new Set([...(existing.services || []), ...services]));
+        existing.service = existing.services[0] || existing.service || '';
+        existing.description = longestText(existing.description, item.description);
+        existing.address = existing.address || item.address;
+        existing.phone1 = existing.phone1 || item.phone1;
+        existing.phone2 = existing.phone2 || item.phone2;
+        existing.whatsapp = existing.whatsapp || item.whatsapp;
+        existing.website = existing.website || item.website;
+        existing.email = existing.email || item.email;
+    }
+
+    return Array.from(map.values());
+}
+
+function longestText(a, b) {
+    return (b || '').length > (a || '').length ? b : a;
 }
 
 function loadFavorites() {
@@ -311,10 +368,11 @@ async function shareContact(id) {
 }
 
 function buildShareText(contact) {
+    const servicesLabel = (contact.services && contact.services.length ? contact.services.join(', ') : contact.service) || 'Servicio';
     const lines = [
         'Les comparto este contacto del Directorio Terravista:',
         '',
-        `${contact.service || 'Servicio'} - ${contact.name || 'Contacto'}`,
+        `${servicesLabel} - ${contact.name || 'Contacto'}`,
     ];
 
     if (contact.whatsapp) lines.push(`WhatsApp: ${contact.whatsapp}`);

@@ -108,21 +108,12 @@
     "stars": 5
   },
   {
-    "service": "Cerrajeria",
+    "service": [
+      "Cerrajeria",
+      "Plomeria"
+    ],
     "name": "Cristian",
-    "description": "🔐",
-    "address": "",
-    "phone1": "+57 300 3716861",
-    "phone2": "",
-    "whatsapp": "+57 300 3716861",
-    "website": "",
-    "email": "",
-    "stars": 5
-  },
-  {
-    "service": "Plomeria",
-    "name": "Cristian",
-    "description": "👷🏼‍♂️",
+    "description": "🔐 👷🏼‍♂️",
     "address": "",
     "phone1": "+57 300 3716861",
     "phone2": "",
@@ -432,18 +423,6 @@
     "stars": 0
   },
   {
-    "service": "Paseo Perros",
-    "name": "Patitas",
-    "description": "Paseos 🐶",
-    "address": "",
-    "phone1": "+57 3169770522",
-    "phone2": "",
-    "whatsapp": "+57 3169770522",
-    "website": "",
-    "email": "lindasspatitass@gmail.com",
-    "stars": 5
-  },
-  {
     "service": "Pizza",
     "name": "Pizza Pauzza",
     "description": "Pizzeria🍕",
@@ -583,18 +562,6 @@
     "phone1": "+57 321 4533322",
     "phone2": "+57 322 9654297",
     "whatsapp": "+57 322 9654297",
-    "website": "",
-    "email": "",
-    "stars": 5
-  },
-  {
-    "service": "Odontologia",
-    "name": "Dr. Mario Romero",
-    "description": "Odontopediatria",
-    "address": "",
-    "phone1": "+57 320 8535067",
-    "phone2": "",
-    "whatsapp": "",
     "website": "",
     "email": "",
     "stars": 5
