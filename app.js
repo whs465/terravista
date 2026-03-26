@@ -300,6 +300,9 @@ function toggleFavorite(id) {
     favorites = favorites.includes(id)
         ? favorites.filter(favoriteId => favoriteId !== id)
         : [id, ...favorites];
+    if (activeFilter === 'favorites' && favorites.length === 0) {
+        activeFilter = 'all';
+    }
     saveFavorites();
     renderQuickFilters();
     render();
