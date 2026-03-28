@@ -1,4 +1,4 @@
-const VERSION = 'v19-favorites-filter';
+const VERSION = 'v20-accessible-icons';
 const CACHE = `pwa-contactos-${VERSION}`;
 const BASE = new URL(self.registration.scope);
 const SHELL = [
@@ -7,7 +7,14 @@ const SHELL = [
     'styles.css',
     'app.js',
     'manifest.webmanifest',
+    'assets/email.svg',
+    'assets/favorite.svg',
+    'assets/map-pin.svg',
+    'assets/phone.svg',
+    'assets/share.svg',
     'assets/terra.jpg',
+    'assets/web.svg',
+    'assets/whatsapp.svg',
     'contacts.json'
 ].map((path) => new URL(path, BASE).toString());
 

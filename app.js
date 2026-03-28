@@ -200,12 +200,48 @@ function escapeHTML(s) {
         .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
 }
 
-function telLink(num) { return num ? `<a class="btn" href="tel:${num}">Tel: ${escapeHTML(num)}</a>` : '' }
+function iconAsset(name, alt = '') {
+    const files = {
+        phone: './assets/phone.svg',
+        whatsapp: './assets/whatsapp.svg',
+        map: './assets/map-pin.svg',
+        email: './assets/email.svg',
+        share: './assets/share.svg',
+        favorite: './assets/favorite.svg',
+    };
+    if (name === 'web') {
+        return '<svg class="action-icon-svg action-icon-svg--web" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8" fill="none"></circle><path d="M3 12h18M12 3a14.5 14.5 0 0 1 0 18M12 3a14.5 14.5 0 0 0 0 18" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round"></path></svg>';
+    }
+    if (!files[name]) return '';
+    return `<img class="action-icon-image" src="${files[name]}" alt="${escapeHTML(alt)}" width="32" height="32" loading="lazy" decoding="async">`;
+}
+
+function actionLink({ href, icon, label, className = '', target = '', rel = '', dataAttrs = '' }) {
+    const classes = ['btn', 'action-btn', className].filter(Boolean).join(' ');
+    return `<a class="${classes}" href="${escapeHTML(href)}" aria-label="${escapeHTML(label)}" title="${escapeHTML(label)}"${target ? ` target="${target}"` : ''}${rel ? ` rel="${rel}"` : ''}${dataAttrs}>${iconAsset(icon, '')}</a>`;
+}
+
+function telLink(num) {
+    if (!num) return '';
+    return actionLink({
+        href: `tel:${num}`,
+        icon: 'phone',
+        label: `Llamar ${num}`,
+        className: 'action-btn--phone',
+    });
+}
 
 function waLink(num) {
     if (!num) return '';
     const digits = String(num).replace(/\D+/g, '');
-    return `<a class="btn btn-primary" href="https://wa.me/${digits}" target="_blank" rel="noopener">WhatsApp</a>`;
+    return actionLink({
+        href: `https://wa.me/${digits}`,
+        icon: 'whatsapp',
+        label: 'Abrir WhatsApp',
+        className: 'action-btn--whatsapp',
+        target: '_blank',
+        rel: 'noopener',
+    });
 }
 
 function mapButtonHTML(contact) {
@@ -213,7 +249,15 @@ function mapButtonHTML(contact) {
     if (!coords) return '';
     const webHref = mapWebLink(contact, coords);
     const geoHref = mapGeoLink(contact, coords);
-    return `<a class="btn outline" href="${escapeHTML(webHref)}" target="_blank" rel="noopener" data-map-web="${escapeHTML(webHref)}" data-map-geo="${escapeHTML(geoHref)}">Mapa</a>`;
+    return actionLink({
+        href: webHref,
+        icon: 'map',
+        label: `Abrir mapa de ${contact.name || contact.address || 'ubicacion'}`,
+        className: 'action-btn--map',
+        target: '_blank',
+        rel: 'noopener',
+        dataAttrs: ` data-map-web="${escapeHTML(webHref)}" data-map-geo="${escapeHTML(geoHref)}"`,
+    });
 }
 
 function mapWebLink(contact, coords = getCoordinates(contact)) {
@@ -254,12 +298,10 @@ function cardHTML(c, q) {
 <article class="card">
   <div class="card-tools">
     <button class="share-toggle" type="button" data-share-contact="${id}" aria-label="Compartir contacto">
-      <svg class="share-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-        <path d="M15 5l-1.41 1.41 2.58 2.59H8a4 4 0 000 8h1v-2H8a2 2 0 010-4h8.17l-2.58 2.59L15 15l5-5-5-5z"></path>
-      </svg>
+      ${iconAsset('share', '')}
     </button>
     <button class="favorite-toggle ${isFavorite ? 'is-active' : ''}" type="button" data-favorite-toggle="${id}" aria-label="${isFavorite ? 'Quitar de favoritos' : 'Guardar en favoritos'}" aria-pressed="${isFavorite}">
-      <span aria-hidden="true">${isFavorite ? '★' : '☆'}</span>
+      ${iconAsset('favorite', '')}
     </button>
   </div>
   <h3>${highlight(c.name || '', q)}</h3>
@@ -274,8 +316,8 @@ function cardHTML(c, q) {
     ${telLink(c.phone2)}
     ${waLink(c.whatsapp)}
     ${mapButtonHTML(c)}
-    ${c.email ? `<a class="btn outline" href="mailto:${escapeHTML(c.email)}">Email</a>` : ''}
-    ${c.website ? `<a class="btn outline" href="${escapeHTML(c.website)}" target="_blank" rel="noopener">Web</a>` : ''}
+    ${c.email ? actionLink({ href: `mailto:${c.email}`, icon: 'email', label: `Enviar email a ${c.email}`, className: 'action-btn--email action-btn--outline' }) : ''}
+    ${c.website ? actionLink({ href: c.website, icon: 'web', label: `Abrir sitio web de ${c.name || 'contacto'}`, className: 'action-btn--web action-btn--outline', target: '_blank', rel: 'noopener' }) : ''}
   </div>
 </article>`;
 }
