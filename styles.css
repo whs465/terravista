@@ -140,17 +140,17 @@ body::after {
     height: 100%;
     object-fit: cover;
     transform-origin: center;
-    animation: hands-spin 24s steps(24, end) infinite;
+    animation: hands-sway 3.2s ease-in-out infinite alternate;
     will-change: transform;
 }
 
-@keyframes hands-spin {
+@keyframes hands-sway {
     from {
-        transform: rotate(0deg);
+        transform: rotate(-10deg);
     }
 
     to {
-        transform: rotate(-360deg);
+        transform: rotate(10deg);
     }
 }
 
