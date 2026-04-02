@@ -180,6 +180,18 @@
     "stars": 4
   },
   {
+    "service": "Electricista",
+    "name": "Felipe",
+    "description": "Reparaciones varias",
+    "address": "",
+    "phone1": "+57 3168943192",
+    "phone2": "",
+    "whatsapp": "+57 3168943192",
+    "website": "",
+    "email": "",
+    "stars": 4
+  },
+  {
     "service": "Electrodomésticos",
     "name": "Carlos Reyes",
     "description": "Reparación neveras y lavadoras",
