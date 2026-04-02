@@ -108,10 +108,7 @@
     "stars": 5
   },
   {
-    "service": [
-      "Cerrajeria",
-      "Plomeria"
-    ],
+    "service": ["Cerrajeria", "Plomeria"],
     "name": "Cristian",
     "description": "🔐 👷🏼‍♂️",
     "address": "",
@@ -267,10 +264,7 @@
     "stars": 5
   },
   {
-    "service": [
-      "Paseo Perros",
-      "Petshop"
-    ],
+    "service": ["Paseo Perros", "Petshop"],
     "name": "La Perrera VIP",
     "description": "Petshop / Paseos / Cuidado en casa🐾🐶🐱",
     "address": "",
@@ -535,7 +529,7 @@
     "email": "",
     "stars": 5
   },
-    {
+  {
     "service": "Remonta",
     "name": "Jennifer",
     "description": "Remontadora de calzado, bolsos y carteras 👠👜",
@@ -560,10 +554,7 @@
     "stars": 5
   },
   {
-    "service": [
-      "Odontologia",
-      "Ortodoncia"
-    ],
+    "service": ["Odontologia", "Ortodoncia"],
     "name": "Katerine bermeo Vargas",
     "description": "Odontología Especializada en Ortodoncia",
     "address": "",
@@ -575,10 +566,7 @@
     "stars": 5
   },
   {
-    "service": [
-      "Odontologia",
-      "Odontopediatria"
-    ],
+    "service": ["Odontologia", "Odontopediatria"],
     "name": "Dr. Mario Romero",
     "description": "Odontopediatria",
     "address": "",
@@ -590,10 +578,7 @@
     "stars": 5
   },
   {
-    "service": [
-      "Odontologia",
-      "Odontopediatria"
-    ],
+    "service": ["Odontologia", "Odontopediatria"],
     "name": "Diana Roa",
     "description": "Odontopediatria 🦷",
     "address": "",
@@ -605,10 +590,7 @@
     "stars": 5
   },
   {
-    "service": [
-      "Odontologia",
-      "Odontopediatria"
-    ],
+    "service": ["Odontologia", "Odontopediatria"],
     "name": "Carolina Ruiz",
     "description": "Odontopediatria 🦷",
     "address": "",
@@ -675,6 +657,20 @@
     "lat": 4.743811,
     "lng": -74.028754,
     "phone1": "+57 318 2346657",
+    "phone2": "",
+    "whatsapp": "+57 318 2346657",
+    "website": "",
+    "email": "",
+    "stars": 5
+  },
+  {
+    "service": "Restaurante",
+    "name": "Pescadería Antojos del Mar",
+    "description": "Pescaderia 🐟",
+    "address": "Cra. 8f #163b-2",
+    "lat": 4.74049,
+    "lng": -74.02911,
+    "phone1": "+57 314 2622682",
     "phone2": "",
     "whatsapp": "+57 318 2346657",
     "website": "",
