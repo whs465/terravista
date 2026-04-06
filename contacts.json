@@ -554,6 +554,18 @@
     "stars": 5
   },
   {
+    "service": ["Plomeria", "Pintura"],
+    "name": "Fredy",
+    "description": "Trabajos de pintura y plomeria 🪠👷🏼‍♂️",
+    "address": "",
+    "phone1": "+57 311 4689927",
+    "phone2": "",
+    "whatsapp": "+57 311 4689927",
+    "website": "",
+    "email": "",
+    "stars": 5
+  },
+  {
     "service": "Plomeria",
     "name": "Jorge Garcia",
     "description": "Trabajos de plomeria 🪠",
