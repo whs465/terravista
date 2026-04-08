@@ -231,6 +231,33 @@ function telLink(num) {
     });
 }
 
+function contactNumbersHTML(contact) {
+    const entries = [
+        { value: contact.phone1, icon: 'phone', label: 'Llamar' },
+        { value: contact.phone2, icon: 'phone', label: 'Llamar' },
+        { value: contact.whatsapp, icon: 'whatsapp', label: 'WhatsApp' },
+    ];
+
+    const seen = new Set();
+    const items = entries
+        .map(({ value, icon, label }) => {
+            const clean = (value || '').toString().trim();
+            if (!clean) return '';
+            const dedupeKey = clean.replace(/\D+/g, '') || clean;
+            if (seen.has(dedupeKey)) return '';
+            seen.add(dedupeKey);
+            return `
+<a class="contact-number" href="tel:${escapeHTML(clean)}" aria-label="${escapeHTML(`${label} ${clean}`)}">
+  <span class="contact-number-icon" aria-hidden="true">${iconAsset(icon, '')}</span>
+  <span class="contact-number-text">${escapeHTML(clean)}</span>
+</a>`;
+        })
+        .filter(Boolean);
+
+    if (!items.length) return '';
+    return `<div class="contact-numbers">${items.join('')}</div>`;
+}
+
 function waLink(num) {
     if (!num) return '';
     const digits = String(num).replace(/\D+/g, '');
@@ -310,10 +337,9 @@ function cardHTML(c, q) {
   </div>
   ${c.description ? `<p class="desc">${highlight(c.description, q)}</p>` : ''}
   ${c.address ? `<p class="addr">📍 ${highlight(c.address, q)}</p>` : ''}
+  ${contactNumbersHTML(c)}
   <p class="share-feedback" data-share-feedback="${id}" aria-live="polite"></p>
   <div class="actions">
-    ${telLink(c.phone1)}
-    ${telLink(c.phone2)}
     ${waLink(c.whatsapp)}
     ${mapButtonHTML(c)}
     ${c.email ? actionLink({ href: `mailto:${c.email}`, icon: 'email', label: `Enviar email a ${c.email}`, className: 'action-btn--email action-btn--outline' }) : ''}

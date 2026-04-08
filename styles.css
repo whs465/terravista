@@ -480,20 +480,66 @@ body::after {
     margin-top: .1rem
 }
 
+.contact-numbers {
+    display: grid;
+    gap: .45rem;
+    margin-top: .15rem;
+}
+
+.contact-number {
+    display: inline-flex;
+    align-items: center;
+    gap: .55rem;
+    width: fit-content;
+    max-width: 100%;
+    padding: .55rem .8rem;
+    border-radius: .9rem;
+    background: rgba(255, 250, 242, .98);
+    border: 1px solid rgba(110, 98, 91, .16);
+    color: var(--ink);
+    text-decoration: none;
+    box-shadow: 0 3px 10px rgba(44, 35, 21, .05);
+}
+
+.contact-number-icon {
+    flex: 0 0 auto;
+    width: 22px;
+    height: 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.contact-number-icon .action-icon-image {
+    width: 20px;
+    height: 20px;
+}
+
+.contact-number-icon img[src*="whatsapp"] {
+    filter: none;
+}
+
+.contact-number-icon img:not([src*="whatsapp"]) {
+    filter: grayscale(1) brightness(0);
+}
+
+.contact-number-text {
+    display: block;
+    font: 600 1rem/1.2 Roboto, system-ui, sans-serif;
+    letter-spacing: .01em;
+    word-break: break-word;
+}
+
 .share-feedback {
-    min-height: 1.1rem;
     margin: 0;
+    display: none;
     color: var(--accent);
     font-size: .8rem;
     font-weight: 600;
-    opacity: 0;
-    transform: translateY(-2px);
-    transition: opacity .15s ease, transform .15s ease
 }
 
 .share-feedback.is-visible {
-    opacity: 1;
-    transform: translateY(0)
+    display: block;
 }
 
 .actions {
