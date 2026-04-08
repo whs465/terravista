@@ -48,6 +48,20 @@
     "stars": 5
   },
   {
+    "service": "Pizza",
+    "name": "Napoly Pizza",
+    "description": "Pizza, comida rápida y platos a la carta. 🍕🍽️",
+    "address": "Calle 163A # 8D - 57",
+    "lat": 4.7398000,
+    "lng": -74.0291000,
+    "phone1": "+57 3013738001",
+    "phone2": "",
+    "whatsapp": "",
+    "website": "",
+    "email": "",
+    "stars": 5
+  },
+  {
     "service": "Arepas",
     "name": "Anita's food company",
     "description": "Arepas 🫓",

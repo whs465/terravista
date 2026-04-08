@@ -234,8 +234,6 @@ function telLink(num) {
 function contactNumbersHTML(contact) {
     const entries = [
         { value: contact.phone1, icon: 'phone', label: 'Llamar' },
-        { value: contact.phone2, icon: 'phone', label: 'Llamar' },
-        { value: contact.whatsapp, icon: 'whatsapp', label: 'WhatsApp' },
     ];
 
     const seen = new Set();
@@ -340,6 +338,7 @@ function cardHTML(c, q) {
   ${contactNumbersHTML(c)}
   <p class="share-feedback" data-share-feedback="${id}" aria-live="polite"></p>
   <div class="actions">
+    ${telLink(c.phone2)}
     ${waLink(c.whatsapp)}
     ${mapButtonHTML(c)}
     ${c.email ? actionLink({ href: `mailto:${c.email}`, icon: 'email', label: `Enviar email a ${c.email}`, className: 'action-btn--email action-btn--outline' }) : ''}
