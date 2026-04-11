@@ -924,7 +924,7 @@ body::after {
     }
 
     .actions .action-icon-image {
-        filter: grayscale(1) brightness(2.4);
+        filter: invert(1) opacity(.85);
     }
 
     .actions .action-btn--whatsapp .action-icon-image {
@@ -936,8 +936,15 @@ body::after {
     }
 
     .share-toggle .action-icon-image {
-        filter: grayscale(1) brightness(2.4);
-        opacity: .82;
+        filter: invert(1) opacity(.72);
+    }
+
+    .favorite-toggle:not(.is-active) .action-icon-image {
+        filter: invert(1) opacity(.55);
+    }
+
+    .contact-number-icon img:not([src*="whatsapp"]) {
+        filter: invert(1) opacity(.8);
     }
 
     .select select {
