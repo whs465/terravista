@@ -8,6 +8,7 @@
     --chip: #E5BC48;
     --border: #D9D2C7;
     --sticky: #FFF7E0;
+    --header-h: 72px;
 }
 
 * {
@@ -119,7 +120,7 @@ body::after {
     border-radius: 999px;
     background: rgba(46, 125, 50, .08);
     color: var(--accent);
-    font: 700 11px/1 Roboto, system-ui, sans-serif;
+    font: 700 12px/1 Roboto, system-ui, sans-serif;
     text-transform: uppercase;
     letter-spacing: .04em;
 }
@@ -203,6 +204,14 @@ body::after {
     padding: .62rem .95rem;
     font: 600 14px/1 Roboto, system-ui, sans-serif;
     cursor: pointer;
+    transition: background-color .14s ease, color .14s ease, border-color .14s ease, transform .1s ease, box-shadow .14s ease;
+}
+
+.quick-filter:hover:not(.is-active) {
+    background: var(--sticky);
+    border-color: var(--accent);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(46, 125, 50, .12);
 }
 
 .quick-filter-icon {
@@ -233,7 +242,15 @@ body::after {
     width: 100%;
     padding: .75rem 1rem;
     border: 1px solid var(--border);
-    border-radius: .75rem
+    border-radius: .75rem;
+    transition: border-color .14s ease, box-shadow .14s ease
+}
+
+.controls input[type="search"]:focus-visible,
+.select select:focus-visible {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(46, 125, 50, .18)
 }
 
 .controls .row {
@@ -263,8 +280,8 @@ body::after {
 
 .az-index {
     position: sticky;
-    top: 72px;
-    height: calc(100vh - 72px);
+    top: var(--header-h);
+    height: calc(100vh - var(--header-h));
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -321,7 +338,7 @@ body::after {
 
 .section-header {
     position: sticky;
-    top: 72px;
+    top: var(--header-h);
     background: var(--sticky);
     color: var(--ink);
     padding: .5rem .75rem;
@@ -337,36 +354,38 @@ body::after {
 
 
 .card {
-    background: linear-gradient(180deg, rgba(0, 0, 0, 0.18) 0%, rgba(0, 0, 0, 0) 28%), var(--card);
+    background: var(--card);
     border: 2px solid var(--border);
+    border-top: 3px solid var(--accent);
     border-radius: 1rem;
     padding: .9rem;
     display: grid;
     gap: .5rem;
     color: var(--ink);
-    box-shadow: 0 6px 18px rgba(138, 63, 127, .25), inset 0 1px 0 rgba(255, 255, 255, .04), inset 0 -1px 0 rgba(0, 0, 0, .35);
+    box-shadow: 0 4px 16px rgba(46, 125, 50, .12), 0 1px 4px rgba(44, 35, 21, .08);
     position: relative;
     transition: transform .14s ease, box-shadow .14s ease, border-color .14s ease
 }
 
 .card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 24px rgba(138, 63, 127, .20), inset 0 1px 0 rgba(255, 255, 255, .04), inset 0 -1px 0 rgba(0, 0, 0, .28)
+    box-shadow: 0 8px 24px rgba(46, 125, 50, .18), 0 2px 6px rgba(44, 35, 21, .08)
 }
 
 .card:active {
     transform: scale(.985);
-    box-shadow: 0 4px 12px rgba(138, 63, 127, .16), inset 0 1px 0 rgba(255, 255, 255, .04), inset 0 -1px 0 rgba(0, 0, 0, .28)
+    box-shadow: 0 2px 8px rgba(46, 125, 50, .12), 0 1px 3px rgba(44, 35, 21, .06)
 }
 
 .card:focus-within {
     border-color: var(--chip);
-    box-shadow: 0 0 0 3px rgba(229, 188, 72, .18), 0 8px 20px rgba(138, 63, 127, .18), inset 0 1px 0 rgba(255, 255, 255, .04), inset 0 -1px 0 rgba(0, 0, 0, .28)
+    box-shadow: 0 0 0 3px rgba(229, 188, 72, .22), 0 6px 18px rgba(46, 125, 50, .14)
 }
 
 .card h3 {
     margin: 0;
-    font-size: 1rem;
+    font-size: 1.05rem;
+    font-weight: 600;
     color: var(--ink);
     padding-right: 4.8rem
 }
@@ -547,6 +566,9 @@ body::after {
     flex-wrap: wrap;
     gap: .45rem;
     align-items: center;
+    border-top: 1px solid var(--border);
+    padding-top: .5rem;
+    margin-top: .1rem;
 }
 
 .actions .btn {
@@ -571,7 +593,7 @@ body::after {
 }
 
 .action-btn--whatsapp {
-    background: rgba(255, 255, 255, .98);
+    background: rgba(46, 125, 50, .07);
 }
 
 .action-btn--phone {
@@ -579,7 +601,7 @@ body::after {
 }
 
 .action-btn--map {
-    background: rgba(255, 255, 255, .98);
+    background: rgba(184, 115, 47, .07);
 }
 
 .action-btn--outline {
@@ -803,11 +825,17 @@ body::after {
     filter: none;
 }
 
-.actions .action-btn.action-btn--whatsapp,
 .actions .action-btn.action-btn--phone,
-.actions .action-btn.action-btn--map,
 .actions .action-btn.action-btn--outline {
     background: rgba(255, 255, 255, .98);
+}
+
+.actions .action-btn.action-btn--whatsapp {
+    background: rgba(46, 125, 50, .07);
+}
+
+.actions .action-btn.action-btn--map {
+    background: rgba(184, 115, 47, .07);
 }
 
 .actions .action-icon-image,
@@ -840,5 +868,88 @@ body::after {
     .actions .action-icon-svg {
         width: 23px;
         height: 23px;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg: #1A1C19;
+        --card: #222623;
+        --ink: #E6F0E6;
+        --muted: #9AAD96;
+        --border: #3A4038;
+        --sticky: #1E2A1E;
+    }
+
+    body {
+        background:
+            linear-gradient(180deg, rgba(0, 0, 0, .55), rgba(0, 0, 0, .55)),
+            radial-gradient(circle at top left, rgba(78, 153, 82, .10), transparent 28%),
+            radial-gradient(circle at top right, rgba(188, 214, 110, .08), transparent 32%),
+            radial-gradient(circle at bottom left, rgba(125, 170, 96, .07), transparent 26%),
+            linear-gradient(180deg, #1A1C19 0%, #1A1C19 100%);
+    }
+
+    .quick-filter {
+        background: #2A2E28;
+    }
+
+    .quick-filter:hover:not(.is-active) {
+        background: #2E3A2C;
+    }
+
+    .contact-number {
+        background: rgba(34, 38, 35, .98);
+    }
+
+    .share-toggle,
+    .favorite-toggle,
+    .action-btn {
+        background: rgba(34, 38, 35, .96);
+        border-color: rgba(160, 180, 155, .18);
+        color: var(--muted);
+    }
+
+    .actions .action-btn.action-btn--phone,
+    .actions .action-btn.action-btn--outline {
+        background: rgba(34, 38, 35, .98);
+    }
+
+    .actions .action-btn.action-btn--whatsapp {
+        background: rgba(46, 125, 50, .14);
+    }
+
+    .actions .action-btn.action-btn--map {
+        background: rgba(184, 115, 47, .14);
+    }
+
+    .actions .action-icon-image {
+        filter: grayscale(1) brightness(2.4);
+    }
+
+    .actions .action-btn--whatsapp .action-icon-image {
+        filter: none;
+    }
+
+    .actions .action-icon-svg {
+        color: var(--ink);
+    }
+
+    .share-toggle .action-icon-image {
+        filter: grayscale(1) brightness(2.4);
+        opacity: .82;
+    }
+
+    .select select {
+        background: #2A2E28;
+        color: var(--ink);
+    }
+
+    #splash {
+        background: #1A1C19;
+    }
+
+    .pop-card {
+        background: var(--card);
     }
 }
