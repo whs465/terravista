@@ -400,7 +400,7 @@ body::after {
     left: .1rem;
     top: 50%;
     transform: translateY(-52%);
-    font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+    font-family: 'Lora', Georgia, 'Times New Roman', serif;
     font-size: 3.8rem;
     font-weight: 600;
     color: var(--accent);
@@ -447,7 +447,7 @@ body::after {
 }
 
 .card h3 {
-    font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+    font-family: 'Lora', Georgia, 'Times New Roman', serif;
     margin: 0;
     font-size: 1.1rem;
     font-weight: 500;
