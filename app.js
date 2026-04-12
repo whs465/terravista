@@ -40,7 +40,13 @@ document.addEventListener('visibilitychange', () => {
 // Guardar estado si el navegador detecta que la PWA ya está instalada
 if ('getInstalledRelatedApps' in navigator) {
     navigator.getInstalledRelatedApps()
-        .then(apps => { if (apps.length) persistInstalledState(true); })
+        .then(apps => {
+            if (apps.length) {
+                persistInstalledState(true);
+                deferredPrompt = null;
+                syncInstallButtonVisibility();
+            }
+        })
         .catch(() => { });
 }
 
@@ -88,8 +94,10 @@ el.installBtn?.addEventListener('click', async () => {
         return;
     }
     deferredPrompt.prompt();
-    await deferredPrompt.userChoice;
-    persistInstalledState(true);
+    const choice = await deferredPrompt.userChoice;
+    if (choice?.outcome === 'accepted') {
+        persistInstalledState(true);
+    }
     deferredPrompt = null;
     syncInstallButtonVisibility();
 });
