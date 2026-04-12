@@ -8,5 +8,11 @@
     "theme_color": "#2E7D32",
     "lang": "es-CO",
     "description": "Directorio de servicios y contactos del edificio con búsqueda offline.",
-    "icons": []
+    "icons": [],
+    "related_applications": [
+        {
+            "platform": "webapp",
+            "url": "https://terravista166.vercel.app/manifest.webmanifest"
+        }
+    ]
 }

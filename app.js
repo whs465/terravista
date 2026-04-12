@@ -37,12 +37,23 @@ document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') syncInstallButtonVisibility();
 });
 
-window.addEventListener('beforeinstallprompt', (e) => {
+window.addEventListener('beforeinstallprompt', async (e) => {
     e.preventDefault();
     if (isInstallButtonSuppressed()) {
         deferredPrompt = null;
         syncInstallButtonVisibility();
         return;
+    }
+    if ('getInstalledRelatedApps' in navigator) {
+        try {
+            const installed = await navigator.getInstalledRelatedApps();
+            if (installed.length) {
+                persistInstalledState(true);
+                deferredPrompt = null;
+                syncInstallButtonVisibility();
+                return;
+            }
+        } catch { }
     }
     deferredPrompt = e;
     syncInstallButtonVisibility();
@@ -124,6 +135,11 @@ el.sortBy?.addEventListener('input', render);
 el.quickFilters?.addEventListener('click', onQuickFilterClick);
 document.addEventListener('click', onDocumentClick);
 
+const appHeader = document.querySelector('.app-header');
+window.addEventListener('scroll', () => {
+    appHeader?.classList.toggle('is-scrolled', window.scrollY > 50);
+}, { passive: true });
+
 function normalize(s) { return (s || '').toString().toLowerCase(); }
 
 function normalizeServices(service) {
@@ -172,16 +188,21 @@ function render() {
         buildAZ();
         return;
     }
-    el.list.innerHTML = letters.map(letter => sectionHTML(letter, groups[letter], q)).join('');
+    let cardOffset = 0;
+    el.list.innerHTML = letters.map(letter => {
+        const html = sectionHTML(letter, groups[letter], q, cardOffset);
+        cardOffset += groups[letter].length;
+        return html;
+    }).join('');
     buildAZ();
 }
 
-function sectionHTML(letter, items, q) {
+function sectionHTML(letter, items, q, offset = 0) {
     return `
 <section class="section" id="${letter}">
-  <div class="section-header"><strong>${letter}</strong> · ${items.length} contacto(s)</div>
+  <div class="section-header" data-letter="${letter}"><strong>${letter}</strong> · ${items.length} contacto(s)</div>
   <div class="grid">
-    ${items.map(c => cardHTML(c, q)).join('')}
+    ${items.map((c, i) => cardHTML(c, q, offset + i)).join('')}
   </div>
 </section>`;
 }
@@ -316,11 +337,12 @@ function isMobileDevice() {
     return /android|iphone|ipad|ipod|mobile/i.test(navigator.userAgent || '');
 }
 
-function cardHTML(c, q) {
+function cardHTML(c, q, cardIndex = 0) {
     const id = contactId(c);
     const isFavorite = favorites.includes(id);
+    const stagger = Math.min(cardIndex, 10);
     return `
-<article class="card">
+<article class="card" style="--i:${stagger}">
   <div class="card-tools">
     <button class="share-toggle" type="button" data-share-contact="${id}" aria-label="Compartir contacto">
       ${iconAsset('share', '')}
