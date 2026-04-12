@@ -37,6 +37,18 @@ document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') syncInstallButtonVisibility();
 });
 
+// Guardar estado si el navegador detecta que la PWA ya está instalada
+if ('getInstalledRelatedApps' in navigator) {
+    navigator.getInstalledRelatedApps()
+        .then(apps => { if (apps.length) persistInstalledState(true); })
+        .catch(() => { });
+}
+
+// Guardar estado si la página se abre en modo standalone (desde ícono de inicio)
+window.matchMedia('(display-mode: standalone)').addEventListener('change', e => {
+    if (e.matches) persistInstalledState(true);
+});
+
 window.addEventListener('beforeinstallprompt', async (e) => {
     e.preventDefault();
     if (isInstallButtonSuppressed()) {
@@ -76,10 +88,8 @@ el.installBtn?.addEventListener('click', async () => {
         return;
     }
     deferredPrompt.prompt();
-    const choice = await deferredPrompt.userChoice;
-    if (choice?.outcome === 'accepted') {
-        persistInstalledState(true);
-    }
+    await deferredPrompt.userChoice;
+    persistInstalledState(true);
     deferredPrompt = null;
     syncInstallButtonVisibility();
 });
