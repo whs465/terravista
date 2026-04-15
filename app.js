@@ -588,27 +588,27 @@ function buildShareText(contact) {
     const reviewFlag = getReviewFlag(contact);
     const lines = [
         reviewFlag?.shareRestricted
-            ? 'Comparto este contacto del Directorio Terravista con una observación reciente:'
-            : 'Les comparto este contacto del Directorio Terravista:',
+            ? '*Contacto del Directorio Terravista con observación reciente:*'
+            : '*Contacto del Directorio Terravista:*',
         '',
-        `${servicesLabel} - ${contact.name || 'Contacto'}`,
+        `*${servicesLabel}* - *${contact.name || 'Contacto'}*`,
     ];
 
     if (reviewFlag?.shareRestricted) {
-        lines.push(`Aviso: ${reviewFlag.message}`);
-        lines.push(reviewFlag.caution);
-        if (reviewFlag.date) lines.push(formatReviewDate(reviewFlag.date));
+        lines.push(`*Aviso:* ${reviewFlag.message}`);
+        lines.push(`*Recomendación:* ${reviewFlag.caution}`);
+        if (reviewFlag.date) lines.push(`*${formatReviewDate(reviewFlag.date)}*`);
         lines.push('');
     }
 
-    if (contact.whatsapp) lines.push(`WhatsApp: ${contact.whatsapp}`);
-    if (contact.phone1) lines.push(`Tel: ${contact.phone1}`);
-    if (contact.phone2) lines.push(`Tel alterno: ${contact.phone2}`);
-    if (contact.email) lines.push(`Email: ${contact.email}`);
-    if (contact.website) lines.push(`Web: ${contact.website}`);
-    if (contact.description) lines.push(`Detalle: ${contact.description}`);
+    if (contact.whatsapp) lines.push(`*WhatsApp:* ${contact.whatsapp}`);
+    if (contact.phone1) lines.push(`*Tel:* ${contact.phone1}`);
+    if (contact.phone2) lines.push(`*Tel alterno:* ${contact.phone2}`);
+    if (contact.email) lines.push(`*Email:* ${contact.email}`);
+    if (contact.website) lines.push(`*Web:* ${contact.website}`);
+    if (contact.description) lines.push(`*Detalle:* ${contact.description}`);
     lines.push('');
-    lines.push(`Directorio: ${APP_SHARE_URL}`);
+    lines.push(`*Directorio:* ${APP_SHARE_URL}`);
 
     return lines.join('\n');
 }
