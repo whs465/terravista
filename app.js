@@ -281,14 +281,56 @@ function isMobileDevice() {
     return /android|iphone|ipad|ipod|mobile/i.test(navigator.userAgent || '');
 }
 
+function getReviewFlag(contact) {
+    const flag = contact?.reviewFlag;
+    if (!flag || flag.status !== 'review') return null;
+
+    return {
+        status: 'review',
+        message: (flag.message || 'Un residente reportó una experiencia insatisfactoria con este contacto.').toString().trim(),
+        caution: (flag.caution || 'Se recomienda validar referencias antes de contratar.').toString().trim(),
+        date: (flag.date || '').toString().trim(),
+        shareRestricted: flag.shareRestricted !== false,
+    };
+}
+
+function reviewChipHTML(reviewFlag) {
+    if (!reviewFlag) return '';
+    return '<span class="chip chip-review">En revisión</span>';
+}
+
+function reviewNoticeHTML(reviewFlag) {
+    if (!reviewFlag) return '';
+    const dateLabel = formatReviewDate(reviewFlag.date);
+    return `
+<section class="review-note" aria-label="Observación del contacto">
+  <div class="review-note-title">Observación reciente</div>
+  <p>${escapeHTML(reviewFlag.message)}</p>
+  <p class="review-note-caution">${escapeHTML(reviewFlag.caution)}</p>
+  ${dateLabel ? `<small>${escapeHTML(dateLabel)}</small>` : ''}
+</section>`;
+}
+
+function formatReviewDate(value) {
+    if (!value) return '';
+    const date = new Date(`${value}T00:00:00`);
+    if (Number.isNaN(date.getTime())) return '';
+    try {
+        return `Reporte recibido el ${new Intl.DateTimeFormat('es-CO', { dateStyle: 'long' }).format(date)}`;
+    } catch {
+        return `Reporte recibido el ${value}`;
+    }
+}
+
 function cardHTML(c, q, cardIndex = 0) {
     const id = contactId(c);
     const isFavorite = favorites.includes(id);
     const stagger = Math.min(cardIndex, 10);
+    const reviewFlag = getReviewFlag(c);
     return `
 <article class="card" style="--i:${stagger}">
   <div class="card-tools">
-    <button class="share-toggle" type="button" data-share-contact="${id}" aria-label="Compartir contacto">
+    <button class="share-toggle ${reviewFlag ? 'is-cautioned' : ''}" type="button" data-share-contact="${id}" aria-label="${reviewFlag ? 'Compartir contacto con advertencia' : 'Compartir contacto'}" title="${reviewFlag ? 'Compartir con advertencia' : 'Compartir contacto'}">
       ${iconAsset('share', '')}
     </button>
     <button class="favorite-toggle ${isFavorite ? 'is-active' : ''}" type="button" data-favorite-toggle="${id}" aria-label="${isFavorite ? 'Quitar de favoritos' : 'Guardar en favoritos'}" aria-pressed="${isFavorite}">
@@ -298,9 +340,11 @@ function cardHTML(c, q, cardIndex = 0) {
   <h3>${highlight(c.name || '', q)}</h3>
   <div class="meta">
     ${serviceChipsHTML(c.services || [])}
+    ${reviewChipHTML(reviewFlag)}
   </div>
   ${c.description ? `<p class="desc">${highlight(c.description, q)}</p>` : ''}
   ${c.address ? `<p class="addr">📍 ${highlight(c.address, q)}</p>` : ''}
+  ${reviewNoticeHTML(reviewFlag)}
   ${contactNumbersHTML(c)}
   <p class="share-feedback" data-share-feedback="${id}" aria-live="polite"></p>
   <div class="actions">
@@ -489,6 +533,7 @@ function mergeContacts(items) {
         existing.email = existing.email || item.email;
         existing.lat = existing.lat ?? item.lat;
         existing.lng = existing.lng ?? item.lng;
+        existing.reviewFlag = existing.reviewFlag || item.reviewFlag;
     }
 
     return Array.from(map.values());
@@ -519,17 +564,18 @@ async function shareContact(id) {
 
     const shareText = buildShareText(contact);
     const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
+    const reviewFlag = getReviewFlag(contact);
 
     try {
         window.open(whatsappUrl, '_blank', 'noopener');
-        showShareFeedback(id, 'Abriendo WhatsApp');
+        showShareFeedback(id, reviewFlag?.shareRestricted ? 'Compartiendo con advertencia' : 'Abriendo WhatsApp');
         return;
     } catch { }
 
     try {
         if (navigator.clipboard?.writeText) {
             await navigator.clipboard.writeText(shareText);
-            showShareFeedback(id, 'Copiado');
+            showShareFeedback(id, reviewFlag?.shareRestricted ? 'Copiado con advertencia' : 'Copiado');
             return;
         }
     } catch { }
@@ -539,11 +585,21 @@ async function shareContact(id) {
 
 function buildShareText(contact) {
     const servicesLabel = (contact.services && contact.services.length ? contact.services.join(', ') : contact.service) || 'Servicio';
+    const reviewFlag = getReviewFlag(contact);
     const lines = [
-        'Les comparto este contacto del Directorio Terravista:',
+        reviewFlag?.shareRestricted
+            ? 'Comparto este contacto del Directorio Terravista con una observación reciente:'
+            : 'Les comparto este contacto del Directorio Terravista:',
         '',
         `${servicesLabel} - ${contact.name || 'Contacto'}`,
     ];
+
+    if (reviewFlag?.shareRestricted) {
+        lines.push(`Aviso: ${reviewFlag.message}`);
+        lines.push(reviewFlag.caution);
+        if (reviewFlag.date) lines.push(formatReviewDate(reviewFlag.date));
+        lines.push('');
+    }
 
     if (contact.whatsapp) lines.push(`WhatsApp: ${contact.whatsapp}`);
     if (contact.phone1) lines.push(`Tel: ${contact.phone1}`);

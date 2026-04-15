@@ -9,6 +9,12 @@
     --border: #D9D2C7;
     --sticky: #FFF7E0;
     --header-h: 72px;
+    --review-bg: #FFF1EE;
+    --review-border: #D89A8C;
+    --review-ink: #7A3428;
+    --review-chip-bg: #F2C7BE;
+    --review-chip-ink: #7A3428;
+    --review-caution: #8A4A3D;
 }
 
 * {
@@ -499,6 +505,11 @@ body::after {
     background: rgba(255, 255, 255, .96);
 }
 
+.share-toggle.is-cautioned {
+    border-color: var(--review-border);
+    background: color-mix(in srgb, var(--review-bg) 88%, white);
+}
+
 .share-toggle .action-icon-image {
     width: 20px;
     height: 20px;
@@ -555,6 +566,13 @@ body::after {
     border: 1px solid var(--border)
 }
 
+.chip-review {
+    background: var(--review-chip-bg);
+    color: var(--review-chip-ink);
+    border-color: var(--review-border);
+    font-weight: 700;
+}
+
 .desc {
     color: var(--muted);
     font-size: .9rem
@@ -564,6 +582,41 @@ body::after {
     color: var(--muted);
     font-size: .9rem;
     margin-top: .1rem
+}
+
+.review-note {
+    display: grid;
+    gap: .28rem;
+    margin-top: .15rem;
+    padding: .72rem .82rem;
+    border-radius: .9rem;
+    background: var(--review-bg);
+    border: 1px solid var(--review-border);
+    color: var(--review-ink);
+}
+
+.review-note-title {
+    font: 700 .82rem/1.1 'DM Sans', system-ui, sans-serif;
+    letter-spacing: .02em;
+    text-transform: uppercase;
+}
+
+.review-note p,
+.review-note small {
+    margin: 0;
+}
+
+.review-note p {
+    line-height: 1.42;
+}
+
+.review-note-caution {
+    color: var(--review-caution);
+    font-weight: 600;
+}
+
+.review-note small {
+    color: color-mix(in srgb, var(--review-ink) 74%, var(--muted));
 }
 
 .contact-numbers {
@@ -946,6 +999,12 @@ body::after {
         --muted: #9AAD96;
         --border: #3A4038;
         --sticky: #1E2A1E;
+        --review-bg: #3B2522;
+        --review-border: #9B5E54;
+        --review-ink: #F4C7BF;
+        --review-chip-bg: #5B312C;
+        --review-chip-ink: #F4C7BF;
+        --review-caution: #E0A79C;
     }
 
     body {
@@ -967,6 +1026,10 @@ body::after {
 
     .contact-number {
         background: rgba(34, 38, 35, .98);
+    }
+
+    .review-note {
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, .02);
     }
 
     .share-toggle,
@@ -1008,6 +1071,11 @@ body::after {
 
     .share-toggle .action-icon-image {
         filter: invert(1) opacity(.72);
+    }
+
+    .share-toggle.is-cautioned {
+        background: color-mix(in srgb, var(--review-bg) 72%, rgba(34, 38, 35, .96));
+        border-color: var(--review-border);
     }
 
     .favorite-toggle:not(.is-active) .action-icon-image {

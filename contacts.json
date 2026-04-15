@@ -215,7 +215,14 @@
     "whatsapp": "+57 310 3211853",
     "website": "",
     "email": "",
-    "stars": 4
+    "stars": 4,
+    "reviewFlag": {
+      "status": "review",
+      "message": "Un residente reportó incumplimientos y un resultado insatisfactorio en la reparación.",
+      "caution": "Se recomienda validar referencias antes de contratar.",
+      "date": "2026-04-14",
+      "shareRestricted": true
+    }
   },
   {
     "service": "Ferretería",
