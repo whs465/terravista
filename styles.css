@@ -505,11 +505,6 @@ body::after {
     background: rgba(255, 255, 255, .96);
 }
 
-.share-toggle.is-cautioned {
-    border-color: var(--review-border);
-    background: color-mix(in srgb, var(--review-bg) 88%, white);
-}
-
 .share-toggle .action-icon-image {
     width: 20px;
     height: 20px;
@@ -554,7 +549,9 @@ body::after {
 .meta {
     display: flex;
     gap: .5rem;
-    flex-wrap: wrap
+    flex-wrap: wrap;
+    padding-right: 4.8rem;
+    row-gap: .4rem;
 }
 
 .chip {
@@ -1073,10 +1070,6 @@ body::after {
         filter: invert(1) opacity(.72);
     }
 
-    .share-toggle.is-cautioned {
-        background: color-mix(in srgb, var(--review-bg) 72%, rgba(34, 38, 35, .96));
-        border-color: var(--review-border);
-    }
 
     .favorite-toggle:not(.is-active) .action-icon-image {
         filter: invert(1) opacity(.55);
