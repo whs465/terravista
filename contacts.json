@@ -145,6 +145,18 @@
     "email": "clinicaveterinaria@lasalle.edu.co",
     "stars": 5
   },
+    {
+    "service": "Enfermeria",
+    "name": "Nikoll",
+    "description": "Enfermera",
+    "address": "",
+    "phone1": "+57 3125688268",
+    "phone2": "",
+    "whatsapp": "+57 3125688268",
+    "website": "",
+    "email": "",
+    "stars": 5
+  },
   {
     "service": "Cortinas",
     "name": "Cortinas la 170",
