@@ -62,6 +62,20 @@
     "stars": 5
   },
   {
+    "service": "Cafeteria",
+    "name": "Panino Café",
+    "description": "Panino Café - tienda de comida artesanal. Sándwich Artesanales, hamburguesa, Empanadas Horneadas, Empanadas fritas Jugos Naturales 🥟🥪🥩🍽️",
+    "address": "Cra. 8g #165 03",
+    "lat": 4.742611,
+    "lng": -74.029852,
+    "phone1": "+57 3103735132",
+    "phone2": "",
+    "whatsapp": "+57 3103735132",
+    "website": "",
+    "email": "",
+    "stars": 5
+  },
+  {
     "service": "Arepas",
     "name": "Anita's food company",
     "description": "Arepas 🫓",
@@ -246,6 +260,34 @@
     "whatsapp": "+57 3219169800",
     "website": "https://ferrezeta.com/",
     "email": "ferrezetaservicioalcliente@gmail.com",
+    "stars": 5
+  },
+  {
+    "service": "Droguería",
+    "name": "Droguería Farma Moderna",
+    "description": "Medicamentos, cuidado personal, primeros auxilios, bienestar y fórmulas médicas. 💊🌡️🩹🧴",
+    "address": "Calle 165 #8g - 18",
+    "lat": 4.74265,
+    "lng": -74.02985,
+    "phone1": "+57 314 3422778",
+    "phone2": "",
+    "whatsapp": "+57 314 3422778",
+    "website": "",
+    "email": "",
+    "stars": 5
+  },
+    {
+    "service": "Droguería",
+    "name": "Droguiexpress",
+    "description": "Medicamentos, cuidado personal, primeros auxilios, bienestar y fórmulas médicas. 💊🌡️🩹🧴",
+    "address": "",
+    "lat": 4.744301,
+    "lng": -74.04212,
+    "phone1": "+57 1 6788540",
+    "phone2": "",
+    "whatsapp": "",
+    "website": "",
+    "email": "",
     "stars": 5
   },
   {
