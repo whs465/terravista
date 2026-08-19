@@ -1,4 +1,4 @@
-const VERSION = 'v20-accessible-icons';
+const VERSION = 'v21-modern-card-layout';
 const CACHE = `pwa-contactos-${VERSION}`;
 const BASE = new URL(self.registration.scope);
 const SHELL = [

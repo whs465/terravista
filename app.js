@@ -18,6 +18,7 @@ const el = {
     quickFilters: document.getElementById('quickFilters'),
     tipTicker: document.getElementById('tipTicker'),
     tipTickerText: document.getElementById('tipTickerText'),
+    appNotice: document.getElementById('appNotice'),
 };
 
 let raw = [];
@@ -25,6 +26,7 @@ let activeFilter = 'all';
 let favorites = loadFavorites();
 let activeLetters = [];
 let listAnimationTimer = null;
+let appNoticeTimer = null;
 let tips = ['Cuidemos entre todos los espacios que compartimos.'];
 let tipIndex = pickNextTipIndex();
 
@@ -77,6 +79,7 @@ fetch(DATA_URL)
 el.search?.addEventListener('input', onSearchInput);
 el.sortBy?.addEventListener('input', render);
 el.quickFilters?.addEventListener('click', onQuickFilterClick);
+el.azIndex?.addEventListener('click', onAZIndexClick);
 document.addEventListener('click', onDocumentClick);
 
 const appHeader = document.querySelector('.app-header');
@@ -133,7 +136,8 @@ function render() {
         return;
     }
     let cardOffset = 0;
-    el.list.innerHTML = letters.map(letter => {
+    const summary = resultsSummaryHTML(data.length, q);
+    el.list.innerHTML = summary + letters.map(letter => {
         const html = sectionHTML(letter, groups[letter], q, cardOffset);
         cardOffset += groups[letter].length;
         return html;
@@ -142,9 +146,14 @@ function render() {
 }
 
 function sectionHTML(letter, items, q, offset = 0) {
+    const countLabel = `${items.length} ${items.length === 1 ? 'contacto' : 'contactos'}`;
     return `
 <section class="section" id="${letter}">
-  <div class="section-header" data-letter="${letter}"><strong>${letter}</strong> · ${items.length} contacto(s)</div>
+  <div class="section-header" data-letter="${letter}">
+    <span class="section-letter">${letter}</span>
+    <span class="section-count">${countLabel}</span>
+    <span class="section-line" aria-hidden="true"></span>
+  </div>
   <div class="grid">
     ${items.map((c, i) => cardHTML(c, q, offset + i)).join('')}
   </div>
@@ -327,8 +336,15 @@ function cardHTML(c, q, cardIndex = 0) {
     const isFavorite = favorites.includes(id);
     const stagger = Math.min(cardIndex, 10);
     const reviewFlag = getReviewFlag(c);
+    const secondaryActions = [
+        telLink(c.phone2),
+        waLink(c.whatsapp),
+        mapButtonHTML(c),
+        c.email ? actionLink({ href: `mailto:${c.email}`, icon: 'email', label: `Enviar email a ${c.email}`, className: 'action-btn--email action-btn--outline' }) : '',
+        c.website ? actionLink({ href: c.website, icon: 'web', label: `Abrir sitio web de ${c.name || 'contacto'}`, className: 'action-btn--web action-btn--outline', target: '_blank', rel: 'noopener' }) : '',
+    ].filter(Boolean).join('');
     return `
-<article class="card" style="--i:${stagger}">
+<article class="card ${reviewFlag ? 'card--review' : ''}" style="--i:${stagger}">
   <div class="card-tools">
     <button class="share-toggle ${reviewFlag ? 'is-cautioned' : ''}" type="button" data-share-contact="${id}" aria-label="${reviewFlag ? 'Compartir contacto con advertencia' : 'Compartir contacto'}" title="${reviewFlag ? 'Compartir con advertencia' : 'Compartir contacto'}">
       ${iconAsset('share', '')}
@@ -337,23 +353,22 @@ function cardHTML(c, q, cardIndex = 0) {
       ${iconAsset('favorite', '')}
     </button>
   </div>
-  <h3>${highlight(c.name || '', q)}</h3>
-  <div class="meta">
-    ${serviceChipsHTML(c.services || [])}
-    ${reviewChipHTML(reviewFlag)}
+  <div class="card-heading">
+    <h3>${highlight(c.name || '', q)}</h3>
+    <div class="meta">
+      ${serviceChipsHTML(c.services || [])}
+      ${reviewChipHTML(reviewFlag)}
+    </div>
   </div>
   ${c.description ? `<p class="desc">${highlight(c.description, q)}</p>` : ''}
   ${c.address ? `<p class="addr">📍 ${highlight(c.address, q)}</p>` : ''}
   ${reviewNoticeHTML(reviewFlag)}
   ${contactNumbersHTML(c)}
   <p class="share-feedback" data-share-feedback="${id}" aria-live="polite"></p>
-  <div class="actions">
-    ${telLink(c.phone2)}
-    ${waLink(c.whatsapp)}
-    ${mapButtonHTML(c)}
-    ${c.email ? actionLink({ href: `mailto:${c.email}`, icon: 'email', label: `Enviar email a ${c.email}`, className: 'action-btn--email action-btn--outline' }) : ''}
-    ${c.website ? actionLink({ href: c.website, icon: 'web', label: `Abrir sitio web de ${c.name || 'contacto'}`, className: 'action-btn--web action-btn--outline', target: '_blank', rel: 'noopener' }) : ''}
-  </div>
+  ${secondaryActions ? `<div class="actions" aria-label="Opciones de contacto adicionales">
+    <span class="actions-label">También disponible por</span>
+    ${secondaryActions}
+  </div>` : ''}
 </article>`;
 }
 
@@ -373,11 +388,44 @@ function emptyStateHTML() {
 </section>`;
     }
 
+    const query = el.search?.value.trim();
+    if (query) {
+        return `
+<section class="empty-state">
+  <h2>No encontramos “${escapeHTML(query)}”</h2>
+  <p>Prueba con una palabra más corta, otro servicio o vuelve a <strong>Todo</strong>.</p>
+</section>`;
+    }
+
+    if (activeFilter.startsWith('service:')) {
+        const service = activeFilter.slice(8);
+        return `
+<section class="empty-state">
+  <h2>Aún no hay contactos en ${escapeHTML(service)}</h2>
+  <p>Elige otra categoría para explorar el directorio completo.</p>
+</section>`;
+    }
+
     return `
 <section class="empty-state">
   <h2>No encontramos resultados</h2>
-  <p>Prueba con otro término de búsqueda o baja el filtro de estrellas.</p>
+  <p>Prueba con otro término de búsqueda o vuelve a <strong>Todo</strong>.</p>
 </section>`;
+}
+
+function resultsSummaryHTML(count, query) {
+    const countLabel = `${count} ${count === 1 ? 'contacto' : 'contactos'}`;
+    let context = 'Todo el directorio';
+
+    if (query) context = `Resultados para “${escapeHTML(el.search.value.trim())}”`;
+    else if (activeFilter === 'favorites') context = 'Tus favoritos';
+    else if (activeFilter.startsWith('service:')) context = escapeHTML(activeFilter.slice(8));
+
+    return `
+<div class="results-summary" aria-live="polite">
+  <span>${context}</span>
+  <strong>${countLabel}</strong>
+</div>`;
 }
 
 function renderQuickFilters() {
@@ -410,6 +458,17 @@ function onQuickFilterClick(event) {
     activeFilter = button.dataset.filter || 'all';
     renderQuickFilters();
     render();
+}
+
+function onAZIndexClick(event) {
+    const link = event.target.closest('a[href^="#"]');
+    if (!link || link.classList.contains('is-disabled')) return;
+    const target = document.getElementById(link.getAttribute('href').slice(1));
+    if (!target) return;
+
+    event.preventDefault();
+    const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
 }
 
 function onSearchInput() {
@@ -486,7 +545,19 @@ function toggleFavorite(id) {
     saveFavorites();
     renderQuickFilters();
     render();
+    showAppNotice(isAdding ? 'Contacto guardado en favoritos' : 'Contacto quitado de favoritos');
     return isAdding;
+}
+
+function showAppNotice(message) {
+    if (!el.appNotice) return;
+    el.appNotice.textContent = message;
+    el.appNotice.classList.add('is-visible');
+    window.clearTimeout(appNoticeTimer);
+    appNoticeTimer = window.setTimeout(() => {
+        el.appNotice.textContent = '';
+        el.appNotice.classList.remove('is-visible');
+    }, 2200);
 }
 
 function contactId(contact) {
