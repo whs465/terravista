@@ -1,4 +1,4 @@
-const VERSION = 'v21-modern-card-layout';
+const VERSION = 'v22-explicit-contact-actions';
 const CACHE = `pwa-contactos-${VERSION}`;
 const BASE = new URL(self.registration.scope);
 const SHELL = [

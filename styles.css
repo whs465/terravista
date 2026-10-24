@@ -1589,3 +1589,101 @@ body::after {
         box-shadow: 0 24px 60px rgba(0, 0, 0, .45);
     }
 }
+
+/* Explicit contact actions make the directory usable without icon literacy. */
+.directory-help {
+    margin: -.1rem 0 0;
+    color: var(--muted);
+    font-size: .82rem;
+    line-height: 1.4;
+}
+
+.contact-number {
+    min-height: 58px;
+    gap: .68rem;
+    padding: .65rem .86rem;
+    border-radius: 14px;
+    background: color-mix(in srgb, #FFF9ED 86%, var(--card));
+}
+
+.contact-number-copy,
+.action-copy {
+    display: grid;
+    min-width: 0;
+    gap: .15rem;
+}
+
+.contact-number-label {
+    color: var(--muted);
+    font: 700 .66rem/1 'DM Sans', sans-serif;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.contact-number-text {
+    font-size: 1.02rem;
+}
+
+.actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: stretch;
+    gap: .5rem;
+    padding: .62rem;
+    background: color-mix(in srgb, var(--surface-soft) 88%, transparent);
+}
+
+.actions-label {
+    grid-column: 1 / -1;
+    margin: .04rem .08rem .12rem;
+    font-size: .66rem;
+}
+
+.actions .action-btn {
+    width: 100% !important;
+    min-height: 58px;
+    height: auto;
+    padding: .5rem .58rem;
+    justify-content: flex-start;
+    gap: .55rem;
+    border-radius: 12px;
+    text-align: left;
+}
+
+.actions--count-1 .action-btn { grid-column: 1 / -1; }
+
+.actions .action-icon-image,
+.actions .action-icon-svg {
+    width: 21px;
+    height: 21px;
+    flex: 0 0 auto;
+}
+
+.action-label {
+    color: var(--ink);
+    font: 700 .78rem/1.1 'DM Sans', sans-serif;
+}
+
+.action-detail {
+    overflow: hidden;
+    color: var(--muted);
+    font: 500 .7rem/1.2 'DM Sans', sans-serif;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+@media (min-width: 720px) {
+    .actions {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .actions-label { grid-column: 1 / -1; }
+
+    .actions--count-1 .action-btn { grid-column: 1 / -1; }
+}
+
+@media (prefers-color-scheme: dark) {
+    .contact-number { background: rgba(39, 47, 39, .9); }
+
+    .actions { background: rgba(16, 22, 17, .38); }
+}

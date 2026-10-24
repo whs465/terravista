@@ -87,7 +87,13 @@ window.addEventListener('scroll', () => {
     appHeader?.classList.toggle('is-scrolled', window.scrollY > 50);
 }, { passive: true });
 
-function normalize(s) { return (s || '').toString().toLowerCase(); }
+function normalize(s) {
+    return (s || '')
+        .toString()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase();
+}
 
 function normalizeServices(service) {
     if (Array.isArray(service)) return service.map(item => (item || '').toString().trim()).filter(Boolean);
@@ -190,9 +196,10 @@ function iconAsset(name, alt = '') {
     return `<img class="action-icon-image" src="${files[name]}" alt="${escapeHTML(alt)}" width="32" height="32" loading="lazy" decoding="async">`;
 }
 
-function actionLink({ href, icon, label, className = '', target = '', rel = '', dataAttrs = '' }) {
+function actionLink({ href, icon, label, text = '', detail = '', className = '', target = '', rel = '', dataAttrs = '' }) {
     const classes = ['btn', 'action-btn', className].filter(Boolean).join(' ');
-    return `<a class="${classes}" href="${escapeHTML(href)}" aria-label="${escapeHTML(label)}" title="${escapeHTML(label)}"${target ? ` target="${target}"` : ''}${rel ? ` rel="${rel}"` : ''}${dataAttrs}>${iconAsset(icon, '')}</a>`;
+    const copy = text ? `<span class="action-copy"><span class="action-label">${escapeHTML(text)}</span>${detail ? `<span class="action-detail">${escapeHTML(detail)}</span>` : ''}</span>` : '';
+    return `<a class="${classes}" href="${escapeHTML(href)}" aria-label="${escapeHTML(label)}" title="${escapeHTML(label)}"${target ? ` target="${target}"` : ''}${rel ? ` rel="${rel}"` : ''}${dataAttrs}>${iconAsset(icon, '')}${copy}</a>`;
 }
 
 function telLink(num) {
@@ -201,6 +208,8 @@ function telLink(num) {
         href: `tel:${num}`,
         icon: 'phone',
         label: `Llamar ${num}`,
+        text: 'Llamar alterno',
+        detail: num,
         className: 'action-btn--phone',
     });
 }
@@ -221,7 +230,10 @@ function contactNumbersHTML(contact) {
             return `
 <a class="contact-number" href="tel:${escapeHTML(clean)}" aria-label="${escapeHTML(`${label} ${clean}`)}">
   <span class="contact-number-icon" aria-hidden="true">${iconAsset(icon, '')}</span>
-  <span class="contact-number-text">${escapeHTML(clean)}</span>
+  <span class="contact-number-copy">
+    <span class="contact-number-label">${escapeHTML(label)}</span>
+    <span class="contact-number-text">${escapeHTML(clean)}</span>
+  </span>
 </a>`;
         })
         .filter(Boolean);
@@ -236,7 +248,9 @@ function waLink(num) {
     return actionLink({
         href: `https://wa.me/${digits}`,
         icon: 'whatsapp',
-        label: 'Abrir WhatsApp',
+        label: `Abrir WhatsApp ${num}`,
+        text: 'WhatsApp',
+        detail: num,
         className: 'action-btn--whatsapp',
         target: '_blank',
         rel: 'noopener',
@@ -252,6 +266,8 @@ function mapButtonHTML(contact) {
         href: webHref,
         icon: 'map',
         label: `Abrir mapa de ${contact.name || contact.address || 'ubicacion'}`,
+        text: 'Ver mapa',
+        detail: contact.address || 'Abrir ubicación',
         className: 'action-btn--map',
         target: '_blank',
         rel: 'noopener',
@@ -340,9 +356,9 @@ function cardHTML(c, q, cardIndex = 0) {
         telLink(c.phone2),
         waLink(c.whatsapp),
         mapButtonHTML(c),
-        c.email ? actionLink({ href: `mailto:${c.email}`, icon: 'email', label: `Enviar email a ${c.email}`, className: 'action-btn--email action-btn--outline' }) : '',
-        c.website ? actionLink({ href: c.website, icon: 'web', label: `Abrir sitio web de ${c.name || 'contacto'}`, className: 'action-btn--web action-btn--outline', target: '_blank', rel: 'noopener' }) : '',
-    ].filter(Boolean).join('');
+        c.email ? actionLink({ href: `mailto:${c.email}`, icon: 'email', label: `Enviar correo a ${c.email}`, text: 'Enviar correo', detail: c.email, className: 'action-btn--email action-btn--outline' }) : '',
+        c.website ? actionLink({ href: c.website, icon: 'web', label: `Abrir sitio web de ${c.name || 'contacto'}`, text: 'Sitio web', detail: 'Abrir página', className: 'action-btn--web action-btn--outline', target: '_blank', rel: 'noopener' }) : '',
+    ].filter(Boolean);
     return `
 <article class="card ${reviewFlag ? 'card--review' : ''}" style="--i:${stagger}">
   <div class="card-tools">
@@ -365,9 +381,9 @@ function cardHTML(c, q, cardIndex = 0) {
   ${reviewNoticeHTML(reviewFlag)}
   ${contactNumbersHTML(c)}
   <p class="share-feedback" data-share-feedback="${id}" aria-live="polite"></p>
-  ${secondaryActions ? `<div class="actions" aria-label="Opciones de contacto adicionales">
-    <span class="actions-label">También disponible por</span>
-    ${secondaryActions}
+  ${secondaryActions.length ? `<div class="actions actions--count-${secondaryActions.length}" aria-label="Opciones de contacto adicionales">
+    <span class="actions-label">Otros medios de contacto</span>
+    ${secondaryActions.join('')}
   </div>` : ''}
 </article>`;
 }
