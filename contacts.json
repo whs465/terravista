@@ -220,6 +220,30 @@
     "stars": 4
   },
   {
+    "service": "Electrodomésticos",
+    "name": "Ricardo Vargas",
+    "description": "Reparación neveras, lavadoras y secadoras",
+    "address": "",
+    "phone1": "+57 3006549545",
+    "phone2": "",
+    "whatsapp": "+57 3006549545",
+    "website": "",
+    "email": "",
+    "stars": 4
+  },
+  {
+    "service": "Taller Automotriz",
+    "name": "World on Wheels",
+    "description": "Taller automotriz multimarca con servicio de mecánica, electricidad, alineación y balanceo, frenos, suspensión, diagnóstico computarizado y mantenimiento preventivo.",
+    "address": "",
+    "phone1": "+57 3173825523",
+    "phone2": "",
+    "whatsapp": "+57 3173825523",
+    "website": "",
+    "email": "",
+    "stars": 4
+  },
+  {
     "service": "Electricista",
     "name": "Felipe",
     "description": "Reparaciones varias",
@@ -375,11 +399,35 @@
     "stars": 5
   },
   {
+    "service": "Veterinaria",
+    "name": "Pinker Pet's",
+    "description": "Servicios para mascotas 🐶🐱",
+    "address": "Cl. 165a #8 G - 85",
+    "phone1": "+57 311 2939788",
+    "phone2": "",
+    "whatsapp": "",
+    "website": "",
+    "email": "",
+    "stars": 5
+  },
+  {
     "service": "Salón de Belleza",
     "name": "Golden Hands Studio",
     "description": "Salon de belleza, manicure, pedicure, depilación, maquillaje profesional 💅💄",
     "address": "",
     "phone1": "+57 304 6052605",
+    "phone2": "",
+    "whatsapp": "",
+    "website": "",
+    "email": "",
+    "stars": 5
+  },
+  {
+    "service": "Modisteria",
+    "name": "Fanny Modisteria",
+    "description": "Servicios de modisteria en Santa Teresa 🧵 🪡",
+    "address": "",
+    "phone1": "+57 320 2002535",
     "phone2": "",
     "whatsapp": "",
     "website": "",
